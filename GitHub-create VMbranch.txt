@@ -1,0 +1,75 @@
+SSBOT - Create a branch and merge updated code
+
+Step 1: Clone the existing repo
+  - In windows, open a command prompt
+  - Navigate to (c:\Temp) and then try run this:
+
+git clone git@github.com:KAR-AUTO/ssbot.git
+
+  - clone will create a directory called (ssbot)
+  - cd to ssbot
+
+Step 2: Show current branches
+  - Navigate to (c:\Temp\ssbot) and then try run this: 
+  - git branch
+
+
+Step 3: Create a branch 
+
+git checkout -b apshow "(or whatever branch name you want to give)"
+
+Step 4: Show current branches:
+
+git branch
+
+  - verify that you now have 2 branches (apshow & master)
+
+Step 5: Copy existing Lambda files (in AWS Lambda) lambda_function.py and ssbot.ini
+  - lambda_function.py
+    - open Notepad ++
+    - navigate to c:\Temp\ssbot\SiteServicesBot
+    - open lambda_function.py
+    - ctrl-a
+    - delete
+    - in AWS Lambda, SiteServicesBot, navigate to lambda_function.py select all (Ctrl-a) & (ctrl-c)
+    - in Notepad ++ lambda_function.py, (ctrl-v) paste the contents from (AWS lambda_function.py)
+    - save Notepad ++ lambda_function.py
+
+  - ssbot.ini
+    - open Notepad ++
+    - navigate to c:\Temp\ssbot\SiteServicesBot
+    - open ssbot.ini
+    - ctrl-a
+    - delete
+    - in AWS Lambda, SiteServicesBot, navigate to ssbot.ini select all (Ctrl-a) & (ctrl-c)
+    - in Notepad ++ ssbot.ini, (ctrl-v) paste the contents from (AWS ssbot.ini)
+    - save Notepad ++ ssbot.ini     
+
+Step 6: Export existing Lex file (in AWS Amazon Lex) SiteServicesBot_Export.json
+  - SiteServicesBot_Export.json
+    - in AWS Amazon Lex, Bots
+    - click the radio button for SiteServicesBot
+    - click Actions
+    - click Export
+    - click Bot version dropdown (choose latest)
+    - click Platform dropdown (choose Amazon Lex)
+    - click Export
+    - navigate to exported / downloaded file zip & open
+    - copy SiteServicesBot_Export.json
+    - in Explorer navigate to c:\Temp\ssbot and replace with new SiteServicesBot_Export.json (just copied)
+
+Step 7: Push the updated files to GitHub
+  - command prompt window (c:\Temp\ssbot)
+
+git add .
+
+Step 8: Commit the updated code for Push into GitHub
+  - command prompt window (c:\Temp\ssbot)
+ 
+git commit -m "Changes for AP Show"
+
+Step 9: Push changes to GitHub for further review and approval to merge
+  - command prompt window (c:\Temp\ssbot)
+
+ git push --set-upstream origin <<rebootvedge>>
+
