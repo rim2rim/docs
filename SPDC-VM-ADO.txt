@@ -1,0 +1,41 @@
+vsphere_server = "p-vcenter-103.adesa.com"
+vsphere_datacenter = "SPDC"
+vsphere_compute_cluster = "SPDC-LX"
+# Only select 1 of these values and delete the other
+#-----------------------------------------------------
+vsphere_datastore = "SPDC_VSI_ESX_PURE_0a_15"
+#vsphere_datastore_cluster = "PDC_storage_cluster" # only works if DRS is enabled on cluster
+#-----------------------------------------------------
+vm_network = "us-kar-spdc|vrf-internal-all|epg-domain-services"
+template_name = "Hemi-Win2019-Template-New"
+vm_basename = "p-wwtjump2" # must be under 11 characters total
+vm_folder = "/KAR/ITSS/SiteServices/MSO/"
+# for "vm_cpu", change this variable to the desired total number of vCPU
+vm_cpu = "4"
+# for "vm_cores_per_socket" This variable must remain 2 as our hosts only have two sockets. 
+vm_cores_per_socket = "2"
+vm_memory = "18432"
+# needed for static IP address, otherwise delete
+# -----------------------------------------------
+vm_ip_address = "172.18.65.52"
+vm_cidr_netmask = "24"
+vm_gateway = "172.18.65.254"
+vm_domain = "adesa.com"
+vm_dns_servers = "172.18.18.244,172.27.175.244"
+# -----------------------------------------------
+#vm_domain = "adesa.com" # default value
+vm_guest_id = "windows9Server64Guest" # default value
+# Build windows machine
+# -----------------------------------------------
+is_windows_image  = "true"
+# -----------------------------------------------
+# To change OS disk size from 80 GB
+# -----------------------------------------------
+vm_disk_size = "153600"
+# -----------------------------------------------
+# Join windows server to AD domain
+# -----------------------------------------------
+join_domain = "true"
+# -----------------------------------------------
+instance_count = "1"
+vm_basenumber = "100" # set base vm name

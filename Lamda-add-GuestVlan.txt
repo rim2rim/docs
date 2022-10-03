@@ -1,0 +1,153 @@
+def port_guestvlan(event, context):
+       
+    userid_string=event['userId']
+    userid = userid_string.split(':')[-1]
+    #userid ='UDEBHDR9R'
+     
+   
+    # We will user the above intent name to differentiate what the customer is trying to do
+    devicename=event["currentIntent"]['slots']['switch_name']
+    print(devicename)
+	portnum=event["currentIntent"]['slots']['port_num']
+	print(portnum)
+    location=event["currentIntent"]['slots']['location']
+    print(location)
+   
+    
+
+    try:
+        secrets=json.loads(get_secret())
+    except Exception as e:  
+       print(e)      
+       response = {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+              "contentType":"SSML",
+              "content": "Unable to set secrets from AWS, please try again later"
+                     },
+                   }
+                 }    
+         
+       return response
+         
+    #Pull token from the SecretManager
+    slacktoken=secrets['slacktoken']
+    #Lets first check if the user is eligible
+    
+     
+
+
+       
+       
+    try:
+       eligiblefunctionalities=get_eligible_functionalities(userid,slacktoken)
+    except Exception as e:
+        response = {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+              "contentType":"SSML",
+              "content": "Unable to contact Slack for channel details, please try again later"
+                     },
+                }
+          }    
+        print(e)  
+        return response
+         
+     
+    
+    # We will use the above to figure out if the member is authorized to do this work
+    if not any("GuestVlan.help-Config Guest Vlan" in s for s in eligiblefunctionalities):
+       response = {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+              "contentType":"SSML",
+              "content": "User not authorized to do Config Port for guest Vlan. You should be a member of channel ssbot-fastgroup. Contact Steve Humphrey."
+                     },
+                }
+          }    
+       return  response
+ 
+
+    #Pull token from the SecretManager
+    towertoken=secrets['tower_ss_token']  
+"""     response=checkinventories(towertoken,'https://tower.karops.io/api/v2/inventories/129/hosts?page_size=1000')
+    #print(response)
+    print("All inventories are ")
+    device_found = False
+    for keyval in response["results"]:
+        if keyval["name"] == devicename:
+           device_found = True
+           break
+           
+    if not device_found:
+       response = {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+              "contentType":"SSML",
+              "content": "Device Name invalid. Please correct the controller name"
+                     },
+                }
+          }    
+       return response
+    
+    """
+    
+    userdetails = []
+    try:   
+      userdetails  = getuserdetails(userid,slacktoken)
+    except Exception as e:
+        response = {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+              "contentType":"SSML",
+              "content": "Unable to contact Slack for Email id , please try again later"
+                     },
+                }
+          }    
+        print(e)  
+        return response
+
+    emailid=userdetails["user"]["profile"]["email"]
+    print(emailid)
+    tower_data = { "extra_vars": { "LOB": location,"cli": devicename,"int_port": portnum,"ss_requestor": emailid } }        
+    header={'Authorization': 'Bearer '+towertoken, 'Content-Type': 'application/json'}
+    url = https://tower.karops.io/api/v2/workflow_job_templates/572/launch/
+    try:
+      resp=sendhttprequest(tower_data,'POST',header,url)
+    except Exception as e:
+        response = {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+              "contentType":"SSML",
+              "content": "Unable to submit Job to Tower, please try again later"
+                     },
+                }
+          }    
+        print(e)  
+        return response
+    response_json=json.loads(resp.data.decode('utf-8'))
+    print(response_json)
+    
+    
+    response = {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+              "contentType":"SSML",
+              "content": "Successfully Submitted Job for checking "+devicename+" in " + location + ". Please check ur email for status."
+            },
+        }
+    }

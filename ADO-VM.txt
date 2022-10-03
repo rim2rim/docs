@@ -1,0 +1,32 @@
+Spin up VM in PDC or SPDC - USING ADOPIPELINE
+
+GITHUB:
+KAR-AUTO/infra-tf-vms
+
+
+C:\temp>git clone git@github.com:KAR-AUTO/infra-tf-vms
+
+C:\temp>cd infra-tf-vms
+
+C:\temp\infra-tf-vms>git checkout adopipeline-vmbuild
+
+Switched to a new branch 'adopipeline-vmbuild'
+Branch 'adopipeline-vmbuild' set up to track remote branch 'adopipeline-vmbuild' from 'origin'.
+
+C:\temp\infra-tf-vms>git branch
+* adopipeline-vmbuild
+  master
+****************************************************************
+Edit file...........
+
+infra-tf-vms/vmware/tf_vars/npdc/azure-pipeline.tfvars
+(with the appropriate variables for the Data Center)
+****************************************************************
+
+C:\temp\infra-tf-vms>git add .
+
+C:\temp\infra-tf-vms>git commit -m "Create VM Jumpbox WWT1"
+
+C:\temp\infra-tf-vms>git push --set-upstream origin adopipeline-vmbuild
+
+Pipeline will start job.  Review information and wait request approval with Rahul or Ayush.

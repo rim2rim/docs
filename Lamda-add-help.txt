@@ -1,0 +1,17 @@
+    #buttonarray=[{"text":"Aruba Uptime","value":"$$Aruba.help$$"},{"text":"Restart Printer Spool","value":"$$Restart.help$$"},{"text":"Config Guest Vlan","value":"$$GuestVlan.help$$"}]
+    buttonarray=[ ]
+    index=0
+	
+
+def lambda_handler(event, context):
+    intentname=event["currentIntent"]['name']
+    print(intentname)
+
+    if intentname == "ArubaCheckUpTime":
+       return aruba_handler(event, context)
+    elif intentname == "RestartPrintSpooler":
+       return restart_spooler(event, context)
+	elif intentname == "AdesaGuestVlan":
+	   return port_guestvlan(event, context)
+    elif intentname == "ssbotHelp":
+       return show_help_response_card(event, context)

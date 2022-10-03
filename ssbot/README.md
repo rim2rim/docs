@@ -1,0 +1,2 @@
+# ssbot
+Repo for Bots

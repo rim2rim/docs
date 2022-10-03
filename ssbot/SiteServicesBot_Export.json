@@ -1,0 +1,1597 @@
+{
+  "metadata": {
+    "schemaVersion": "1.0",
+    "importType": "LEX",
+    "importFormat": "JSON"
+  },
+  "resource": {
+    "name": "SiteServicesBot",
+    "version": "57",
+    "intents": [
+      {
+        "name": "ArubaCheckUpTime",
+        "version": "29",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot:35",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "Can you check the AP uptime of {device_name} in {location}",
+          "ap uptime of {device_name} in {location}",
+          "Check uptime of {device_name} in {location}",
+          "Aruba.help"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "DeviceName",
+            "slotTypeVersion": "2",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which wireless controller? Ex: us-ads-chic-wlc01"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "device_name"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.US_CITY",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Line of Business? Ex: ADESA Chicago"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "location"
+          }
+        ]
+      },
+      {
+        "name": "ArubaShowApUptime",
+        "version": "7",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot:35",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "ShowAp.help",
+          "Check uptime of {controller_name}"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "Controller",
+            "slotTypeVersion": "2",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which wireless controller"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "controller_name"
+          }
+        ]
+      },
+      {
+        "name": "VoiceGwVlan",
+        "version": "5",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "VoiceGwVlan.help",
+          "GW"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.US_CITY",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Line of Business? Ex. ADESA Chicago"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "name": "location"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "PortNumber",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Port Num? Ex. Gi1/0/10"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "port_num"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "SwitchName",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Switch? Ex. US-ADS-CHIC-MDF-SW01"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "switch_name"
+          }
+        ]
+      },
+      {
+        "name": "IntReset",
+        "version": "3",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "IntReset.help"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "IntName",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Interface? Ex. ipsec1"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 4,
+            "name": "int_name"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.US_CITY",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Line of Business? Ex. AFC Indy"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 5,
+            "name": "location"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "VedgeIP",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Vedge Ip Address: Ex. 172.29.16.XXX"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "vedge_ip"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "VedgeName",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Vedge? Ex. US-AFC-INDY-VEDGE-A"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "vedge_name"
+          }
+        ]
+      },
+      {
+        "name": "AdesaUserVlan",
+        "version": "5",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot:35",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "UserVlan.help"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.US_CITY",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Line of Business? Ex. ADESA"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "name": "location"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "PortNumber",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Port Num? Ex. Gi1/0/10"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "port_num"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "SwitchName",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Switch? Ex. US-ADS-CHIC-M"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "switch_name"
+          }
+        ]
+      },
+      {
+        "name": "AdesaGuestVlan",
+        "version": "8",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "GuestVlan.help"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.US_CITY",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Line of Business? Ex. ADESA Tampa"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "name": "location"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "PortNumber",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Port Num? Ex. Gi1/0/10"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "port_num"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "SwitchName",
+            "slotTypeVersion": "1",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Switch? Ex. US-ADS-CHIC-MDF-SW01"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "switch_name"
+          }
+        ]
+      },
+      {
+        "name": "RestartPrintSpooler",
+        "version": "27",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot:35",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "Restart {server} at {location}",
+          "Reboot {server} at {location}",
+          "Restart.help"
+        ],
+        "slots": [
+          {
+            "sampleUtterances": [],
+            "slotType": "AMAZON.US_CITY",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Line of Business? Ex. ADESA Chicago"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "name": "location"
+          },
+          {
+            "sampleUtterances": [],
+            "slotType": "printer",
+            "slotTypeVersion": "3",
+            "obfuscationSetting": "NONE",
+            "slotConstraint": "Required",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "Which Print Server? Ex. p-chic-print-01"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "name": "server"
+          }
+        ]
+      },
+      {
+        "name": "ssbotHelp",
+        "version": "43",
+        "fulfillmentActivity": {
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:930604620050:function:SiteServicesBot:35",
+            "messageVersion": "1.0"
+          },
+          "type": "CodeHook"
+        },
+        "sampleUtterances": [
+          "help"
+        ],
+        "slots": []
+      }
+    ],
+    "slotTypes": [
+      {
+        "description": "Adesa Site Switches",
+        "name": "SwitchName",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "US-ATAMP-GUARD-SW01"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "description": "Site Vedge Name",
+        "name": "VedgeName",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "Vedge_name"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "name": "printer",
+        "version": "3",
+        "enumerationValues": [
+          {
+            "value": "p-jack-print-01"
+          },
+          {
+            "value": "p-buff-print-01"
+          },
+          {
+            "value": "p-calg-print-01"
+          },
+          {
+            "value": "p-sara-print-01"
+          },
+          {
+            "value": " p-bois-print-01"
+          },
+          {
+            "value": "p-memp-print-01"
+          },
+          {
+            "value": "p-bras-print-01"
+          },
+          {
+            "value": "p-knox-print-01"
+          },
+          {
+            "value": "p-flnt-print-01"
+          },
+          {
+            "value": "p-pitt-print-01"
+          },
+          {
+            "value": "p-mont-print-01"
+          },
+          {
+            "value": "p-sana-print-01"
+          },
+          {
+            "value": "p-seat-print-01"
+          },
+          {
+            "value": "p-vtoroprint-01"
+          },
+          {
+            "value": "p-aust-print-01 "
+          },
+          {
+            "value": "p-losa-print-01"
+          },
+          {
+            "value": "p-hali-print-01"
+          },
+          {
+            "value": "p-siou-print-01"
+          },
+          {
+            "value": "p-otta-print-01"
+          },
+          {
+            "value": "p-colo-print-01"
+          },
+          {
+            "value": "p-kitc-print-01"
+          },
+          {
+            "value": "p-lans-print-01"
+          },
+          {
+            "value": "p-minn-print-01"
+          },
+          {
+            "value": "p-kans-print-01"
+          },
+          {
+            "value": "p-stlo-print-01"
+          },
+          {
+            "value": "p-newk-print-01"
+          },
+          {
+            "value": " p-tamp-print-01"
+          },
+          {
+            "value": "p-toro-print-01"
+          },
+          {
+            "value": "p-bost-print-01"
+          },
+          {
+            "value": "p-hous-print-01"
+          },
+          {
+            "value": "p-long-print-01"
+          },
+          {
+            "value": "p-lasv-print-01"
+          },
+          {
+            "value": "p-pwi-print-01"
+          },
+          {
+            "value": "p-sand-print-01"
+          },
+          {
+            "value": "p-birm-print-01"
+          },
+          {
+            "value": "p-ocal-print-01"
+          },
+          {
+            "value": "p-char-print-01"
+          },
+          {
+            "value": "p-wash-print-01"
+          },
+          {
+            "value": "p-desm-print-01"
+          },
+          {
+            "value": "p-gold-print-01"
+          },
+          {
+            "value": "p-atla-print-01"
+          },
+          {
+            "value": "p-clev-print-01"
+          },
+          {
+            "value": "p-edms-print-01"
+          },
+          {
+            "value": "p-shre-print-01"
+          },
+          {
+            "value": "p-john-print-01"
+          },
+          {
+            "value": "p-phoe-print-01"
+          },
+          {
+            "value": "p-monc-print-01"
+          },
+          {
+            "value": "p-nash-print-01"
+          },
+          {
+            "value": "p-cinc-print-01"
+          },
+          {
+            "value": "p-syra-print-01"
+          },
+          {
+            "value": "p-winn-print-01"
+          },
+          {
+            "value": "p-queb-print-01"
+          },
+          {
+            "value": "p-spit-print-01"
+          },
+          {
+            "value": "p-tamp-print-01"
+          },
+          {
+            "value": "p-vanc-print-01"
+          },
+          {
+            "value": "p-rale-print-01"
+          },
+          {
+            "value": "p-chic-print-01"
+          },
+          {
+            "value": "p-vatlaprint-01"
+          },
+          {
+            "value": "p-sacr-print-01"
+          },
+          {
+            "value": "p-vmontprint-01"
+          },
+          {
+            "value": "p-sask-print-01"
+          },
+          {
+            "value": "p-farg-print-01"
+          },
+          {
+            "value": "p-orld-print-01"
+          },
+          {
+            "value": "p-penn-print-01"
+          },
+          {
+            "value": "p-dall-print-01"
+          },
+          {
+            "value": "p-nwst-print-01"
+          },
+          {
+            "value": "p-mesa-print-01"
+          },
+          {
+            "value": "p-conc-print-01"
+          },
+          {
+            "value": "p-lexi-print-01"
+          },
+          {
+            "value": "p-indy-print-01"
+          },
+          {
+            "value": "p-tuls-print-01"
+          },
+          {
+            "value": "p-eten-print-01"
+          },
+          {
+            "value": "p-salt-print-01"
+          },
+          {
+            "value": " p-calg-print-01 "
+          },
+          {
+            "value": "p-fres-print-01"
+          },
+          {
+            "value": "p-ptnd-print-01"
+          },
+          {
+            "value": "p-reno-print-01"
+          },
+          {
+            "value": "p-lroc-print-01"
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      },
+      {
+        "name": "VedgeIP",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "172.29.17.1"
+          },
+          {
+            "value": "172.29.16.254"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "description": "Interface Name",
+        "name": "IntName",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "ipsec2"
+          },
+          {
+            "value": "gre1"
+          },
+          {
+            "value": "gre2"
+          },
+          {
+            "value": "ipsec1"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "description": "Aruba WiFi Controller",
+        "name": "Controller",
+        "version": "2",
+        "enumerationValues": [
+          {
+            "value": "US-ADS-HOUS-WLC02"
+          },
+          {
+            "value": "US-ADS-LOS3-WLC01"
+          },
+          {
+            "value": "CA-ADS-MONC-WLC01"
+          },
+          {
+            "value": "US-ADS-LOS3-WLC02"
+          },
+          {
+            "value": "CA-ADS-MONC-WLC02"
+          },
+          {
+            "value": "US-ADS-HOUS-WLC01"
+          },
+          {
+            "value": "US-ADS-LOSA-WLC02"
+          },
+          {
+            "value": "US-ASPIT-WLC02"
+          },
+          {
+            "value": "US-ASPIT-WLC01"
+          },
+          {
+            "value": "US-ADS-MINN-WLC02"
+          },
+          {
+            "value": "US-ADS-MINN-WLC01"
+          },
+          {
+            "value": "CA-KAR-TRET-WLC01"
+          },
+          {
+            "value": "US-ADS-BUFF-WLC02"
+          },
+          {
+            "value": "US-ADS-BUFF-WLC01"
+          },
+          {
+            "value": "CA-KAR-TRET-WLC02"
+          },
+          {
+            "value": "US-ADS-AUST-WLC01"
+          },
+          {
+            "value": "US-ADS-AUST-WLC02"
+          },
+          {
+            "value": "US-ADS-LROC-WLC01"
+          },
+          {
+            "value": "US-ADS-SHRE-WLC01"
+          },
+          {
+            "value": "US-ADS-LROC-WLC02"
+          },
+          {
+            "value": "US-ADS-SHRE-WLC02"
+          },
+          {
+            "value": "CA-ADS-MONT-WLC01"
+          },
+          {
+            "value": "CA-ADS-MONT-WLC02"
+          },
+          {
+            "value": "CA-ADS-TILB-WLC02"
+          },
+          {
+            "value": "CA-ADS-TILB-WLC01"
+          },
+          {
+            "value": "US-ADS-SYRC-WLC01"
+          },
+          {
+            "value": "CA-AVI-MONT-WLC01"
+          },
+          {
+            "value": "US-ADS-SYRC-WLC02"
+          },
+          {
+            "value": "CA-AVI-MONT-WLC02"
+          },
+          {
+            "value": "US-ADS-BOIS-WLC01"
+          },
+          {
+            "value": "US-ADS-BOIS-WLC02"
+          },
+          {
+            "value": "US-ADS-GOLD-WLC01"
+          },
+          {
+            "value": "US-ADS-LONG-WLC01"
+          },
+          {
+            "value": "CA-ADS-WINN-WLC01"
+          },
+          {
+            "value": "US-ADS-GOLD-WLC02"
+          },
+          {
+            "value": "US-ADS-LONG-WLC02"
+          },
+          {
+            "value": "CA-ADS-WINN-WLC02"
+          },
+          {
+            "value": "US-ADS-ORLD-WLC02"
+          },
+          {
+            "value": "US-ADS-ORLD-WLC01"
+          },
+          {
+            "value": "CA-ADS-TORO-WLC02"
+          },
+          {
+            "value": "CA-ADS-TORO-WLC01"
+          },
+          {
+            "value": "US-ADS-CINC-WLC02"
+          },
+          {
+            "value": "CA-ADS-CALG-WLC02"
+          },
+          {
+            "value": "CA-OPL-TCCO-WLC01"
+          },
+          {
+            "value": "CA-OPL-TCCO-WLC02",
+            "synonyms": []
+          },
+          {
+            "value": "US-ADS-CINC-WLC01"
+          },
+          {
+            "value": "US-ADS-PTND-WLC01"
+          },
+          {
+            "value": "US-ADS-CHIC-WLC01"
+          },
+          {
+            "value": "US-ADS-PTND-WLC02"
+          },
+          {
+            "value": "CA-ADS-CALG-WLC01"
+          },
+          {
+            "value": "US-ADS-CHIC-WLC02"
+          },
+          {
+            "value": "US-ADS-LANS-WLC02"
+          },
+          {
+            "value": "US-ADS-LANS-WLC01"
+          },
+          {
+            "value": "US-ADS-CLEV-WLC02"
+          },
+          {
+            "value": "US-ADS-CLEV-WLC01"
+          },
+          {
+            "value": "US-ADS-KANS-WLC02"
+          },
+          {
+            "value": "US-ADS-KANS-WLC01"
+          },
+          {
+            "value": "US-ADS-CONC-WLC02"
+          },
+          {
+            "value": "US-ADS-FARG-WLC01"
+          },
+          {
+            "value": "US-ADS-FARG-WLC02"
+          },
+          {
+            "value": "US-ADS-NWST-WLC01"
+          },
+          {
+            "value": "US-ADS-NWST-WLC02"
+          },
+          {
+            "value": "US-ADS-DESM-WLC02"
+          },
+          {
+            "value": "US-ADS-NASH-WLC02"
+          },
+          {
+            "value": "US-ADS-OCAL-WLC01"
+          },
+          {
+            "value": "US-ADS-NASH-WLC01"
+          },
+          {
+            "value": "US-ADS-DULL-WLC02"
+          },
+          {
+            "value": "US-ADS-DESM-WLC01"
+          },
+          {
+            "value": "US-ADS-OCAL-WLC02"
+          },
+          {
+            "value": "CA-ADS-VANC-WLC02"
+          },
+          {
+            "value": "CA-ADS-VANC-WLC01"
+          },
+          {
+            "value": "US-ADS-CONC-WLC01"
+          },
+          {
+            "value": "US-ADS-BRAS-WLC02"
+          },
+          {
+            "value": "US-ADS-BRAS-WLC01"
+          },
+          {
+            "value": "CA-ADS-KITC-WLC02"
+          },
+          {
+            "value": "US-ADS-INDY-WLC01"
+          },
+          {
+            "value": "US-ADS-INDY-WLC02"
+          },
+          {
+            "value": "US-ADS-RALE-WLC01"
+          },
+          {
+            "value": "US-ADS-RALE-WLC02"
+          },
+          {
+            "value": "CA-ADS-KITC-WLC01"
+          },
+          {
+            "value": "US-ADS-JACK-WLC01"
+          },
+          {
+            "value": "US-ADS-JACK-WLC02"
+          },
+          {
+            "value": "US-KAR-DRIV-WLC02"
+          },
+          {
+            "value": "US-KAR-DRIV-WLC01"
+          },
+          {
+            "value": "US-ADS-LOSA-WLC01"
+          },
+          {
+            "value": "US-ADS-ETEN-WLC02"
+          },
+          {
+            "value": "US-ADS-ETEN-WLC01"
+          },
+          {
+            "value": "US-ADS-SARA-WLC01"
+          },
+          {
+            "value": "US-ADS-TULS-WLC02"
+          },
+          {
+            "value": "US-ADS-TULS-WLC01"
+          },
+          {
+            "value": "CA-ADS-QUEB-WLC02"
+          },
+          {
+            "value": "US-ADS-NEW-WLC01"
+          },
+          {
+            "value": "US-ADS-NEW-WLC02"
+          },
+          {
+            "value": "US-ADS-BIRM-WLC02"
+          },
+          {
+            "value": "US-ADS-SARA-WLC02"
+          },
+          {
+            "value": "US-ADS-BIRM-WLC01"
+          },
+          {
+            "value": "US-ADS-FLNT-WLC02"
+          },
+          {
+            "value": "US-ADS-SANA-WLC01"
+          },
+          {
+            "value": "US-ADS-FLNT-WLC01"
+          },
+          {
+            "value": "US-ADS-CHAR-WLC01"
+          },
+          {
+            "value": "US-ADS-SIOU-WLC01"
+          },
+          {
+            "value": "US-ADS-CHAR-WLC02"
+          },
+          {
+            "value": "US-ADS-SIOU-WLC02"
+          },
+          {
+            "value": "US-ADS-SANA-WLC02"
+          },
+          {
+            "value": "US-ADS-LAFW-WLC01"
+          },
+          {
+            "value": "US-ADS-ATLA-WLC02"
+          },
+          {
+            "value": "US-ADS-ATLA-WLC01"
+          },
+          {
+            "value": "US-ADS-BOI2-WLC01"
+          },
+          {
+            "value": "US-ADS-STLO-WLC01"
+          },
+          {
+            "value": "CA-ADS-QUEB-WLC01"
+          },
+          {
+            "value": "US-ADS-STLO-WLC02"
+          },
+          {
+            "value": "US-ADS-KNOX-WLC01"
+          },
+          {
+            "value": "US-ADS-KNOX-WLC02"
+          },
+          {
+            "value": "US-AVI-ATLA-WLC02"
+          },
+          {
+            "value": "US-AVI-ATLA-WLC01"
+          },
+          {
+            "value": "US-ADS-BOST-WLC02"
+          },
+          {
+            "value": "US-ADS-PITT-WLC02"
+          },
+          {
+            "value": "US-ADS-BOST-WLC01"
+          },
+          {
+            "value": "US-ADS-RENO-WLC02"
+          },
+          {
+            "value": "US-ADS-RENO-WLC01"
+          },
+          {
+            "value": "US-ADS-PENN-WLC01"
+          },
+          {
+            "value": "US-ADS-SACR-WLC01"
+          },
+          {
+            "value": "US-ADS-LEXI-WLC01"
+          },
+          {
+            "value": "US-ADS-SAND-WLC01"
+          },
+          {
+            "value": "US-ADS-LEXI-WLC02"
+          },
+          {
+            "value": "US-ADS-SAND-WLC02"
+          },
+          {
+            "value": "US-ADS-DULL-WLC01"
+          },
+          {
+            "value": "US-ADS-PITT-WLC01"
+          },
+          {
+            "value": "US-ADS-SACR-WLC02"
+          },
+          {
+            "value": "US-ADS-PENN-WLC02"
+          },
+          {
+            "value": "US-ADS-TAMP-WLC02"
+          },
+          {
+            "value": "US-ADS-TAMP-WLC01"
+          },
+          {
+            "value": "US-ADS-LOS2-WLC02"
+          },
+          {
+            "value": "US-ADS-LOS2-WLC01"
+          },
+          {
+            "value": "US-ADS-COLO-WLC01"
+          },
+          {
+            "value": "US-ADS-SALT-WLC02"
+          },
+          {
+            "value": "US-ADS-SALT-WLC01"
+          },
+          {
+            "value": "US-ADS-COLO-WLC02"
+          },
+          {
+            "value": "CA-ADS-EDMT-WLC01"
+          },
+          {
+            "value": "CA-ADS-EDMT-WLC02"
+          },
+          {
+            "value": "US-ADS-NEWK-WLC01"
+          },
+          {
+            "value": "US-ADS-NEWK-WLC02"
+          },
+          {
+            "value": "US-ADS-FRES-WLC02"
+          },
+          {
+            "value": "US-ADS-FRES-WLC01"
+          },
+          {
+            "value": "CA-AVI-TORO-WLC02"
+          },
+          {
+            "value": "CA-AVI-TORO-WLC01"
+          },
+          {
+            "value": "CA-ADS-HALI-WLC02"
+          },
+          {
+            "value": "CA-ADS-HALI-WLC01"
+          },
+          {
+            "value": "CA-ADS-STJN-WLC01"
+          },
+          {
+            "value": "US-ADS-SYR2-WLC02"
+          },
+          {
+            "value": "US-ADS-SYR2-WLC01"
+          },
+          {
+            "value": "US-ADS-APHOE-WLC02"
+          },
+          {
+            "value": "CA-ADS-OTTA-WLC02"
+          },
+          {
+            "value": "CA-ADS-STJN-WLC02"
+          },
+          {
+            "value": "US-ADS-APHOE-WLC01"
+          },
+          {
+            "value": "CA-ADS-OTTA-WLC01"
+          },
+          {
+            "value": "US-ADS-LASV-WLC01"
+          },
+          {
+            "value": "US-ADS-SEAT-WLC02"
+          },
+          {
+            "value": "US-ADS-LASV-WLC02"
+          },
+          {
+            "value": "US-ADS-SEAT-WLC01"
+          },
+          {
+            "value": "US-ADS-MEMP-WLC02"
+          },
+          {
+            "value": "US-ADS-MEMP-WLC01"
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      },
+      {
+        "description": "Switch Port Number",
+        "name": "PortNumber",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "Gi1/0/10"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "description": "Name of Aruba devices",
+        "name": "DeviceName",
+        "version": "2",
+        "enumerationValues": [
+          {
+            "value": "CA-ADS-MONC-WLC01"
+          },
+          {
+            "value": "CA-ADS-MONC-WLC02"
+          },
+          {
+            "value": "US-ADS-BUFF-WLC02 "
+          },
+          {
+            "value": "US-ADS-LOSA-WLC02"
+          },
+          {
+            "value": "CA-KAR-TRET-WLC01"
+          },
+          {
+            "value": "US-ADS-BUFF-WLC02"
+          },
+          {
+            "value": "CA-KAR-TRET-WLC02"
+          },
+          {
+            "value": "US-ADS-BUFF-WLC01"
+          },
+          {
+            "value": "US-ADS-LROC-WLC01"
+          },
+          {
+            "value": "US-ADS-SHRE-WLC01"
+          },
+          {
+            "value": "US-ADS-LROC-WLC02"
+          },
+          {
+            "value": "US-ADS-SHRE-WLC02"
+          },
+          {
+            "value": "CA-ADS-MONT-WLC01"
+          },
+          {
+            "value": "CA-ADS-MONT-WLC02"
+          },
+          {
+            "value": "CA-ADS-TILB-WLC02"
+          },
+          {
+            "value": "CA-ADS-TILB-WLC01"
+          },
+          {
+            "value": "US-ADS-SYRC-WLC01"
+          },
+          {
+            "value": "US-ADS-SYRC-WLC02"
+          },
+          {
+            "value": "CA-ADS-WINN-WLC01"
+          },
+          {
+            "value": "US-ADS-GOLD-WLC01"
+          },
+          {
+            "value": "CA-ADS-WINN-WLC02"
+          },
+          {
+            "value": "US-ADS-GOLD-WLC02"
+          },
+          {
+            "value": "CA-ADS-CALG-WLC02"
+          },
+          {
+            "value": "CA-ADS-CALG-WLC01"
+          },
+          {
+            "value": "US-ADS-LANS-WLC02"
+          },
+          {
+            "value": "US-ADS-LANS-WLC01"
+          },
+          {
+            "value": "US-ADS-CLEV-WLC02"
+          },
+          {
+            "value": "US-ADS-CLEV-WLC01"
+          },
+          {
+            "value": "US-ADS-CONC-WLC02"
+          },
+          {
+            "value": "US-ADS-FARG-WLC01"
+          },
+          {
+            "value": "US-ADS-FARG-WLC02"
+          },
+          {
+            "value": "US-ADS-DESM-WLC02"
+          },
+          {
+            "value": "US-ADS-NASH-WLC02"
+          },
+          {
+            "value": "US-ADS-OCAL-WLC01"
+          },
+          {
+            "value": "US-ADS-NASH-WLC01"
+          },
+          {
+            "value": "US-ADS-DULL-WLC02"
+          },
+          {
+            "value": "US-ADS-DESM-WLC01"
+          },
+          {
+            "value": "US-ADS-OCAL-WLC02"
+          },
+          {
+            "value": "CA-ADS-VANC-WLC02"
+          },
+          {
+            "value": "CA-ADS-VANC-WLC01"
+          },
+          {
+            "value": "US-ADS-CONC-WLC01"
+          },
+          {
+            "value": "CA-ADS-KITC-WLC02"
+          },
+          {
+            "value": "US-ADS-RALE-WLC01"
+          },
+          {
+            "value": "US-ADS-RALE-WLC02"
+          },
+          {
+            "value": "CA-ADS-KITC-WLC01"
+          },
+          {
+            "value": "US-ADS-JACK-WLC01"
+          },
+          {
+            "value": "US-ADS-JACK-WLC02"
+          },
+          {
+            "value": "US-ADS-LOSA-WLC01"
+          },
+          {
+            "value": "US-ADS-ETEN-WLC02"
+          },
+          {
+            "value": "US-ADS-ETEN-WLC01"
+          },
+          {
+            "value": "US-ADS-SARA-WLC01"
+          },
+          {
+            "value": "US-ADS-TULS-WLC02"
+          },
+          {
+            "value": "CA-ADS-QUEB-WLC02"
+          },
+          {
+            "value": "US-ADS-TULS-WLC01"
+          },
+          {
+            "value": "US-ADS-NEW-WLC01"
+          },
+          {
+            "value": "US-ADS-NEW-WLC02"
+          },
+          {
+            "value": "US-ADS-BIRM-WLC02"
+          },
+          {
+            "value": "US-ADS-SARA-WLC02"
+          },
+          {
+            "value": "US-ADS-BIRM-WLC01"
+          },
+          {
+            "value": "US-ADS-SIOU-WLC01"
+          },
+          {
+            "value": "US-ADS-SIOU-WLC02"
+          },
+          {
+            "value": "US-ADS-ATLA-WLC02"
+          },
+          {
+            "value": "US-ADS-ATLA-WLC01"
+          },
+          {
+            "value": "CA-ADS-QUEB-WLC01"
+          },
+          {
+            "value": "US-ADS-STLO-WLC01"
+          },
+          {
+            "value": "US-ADS-STLO-WLC02"
+          },
+          {
+            "value": "US-ADS-KNOX-WLC01"
+          },
+          {
+            "value": "US-ADS-KNOX-WLC02"
+          },
+          {
+            "value": "US-ADS-PITT-WLC02"
+          },
+          {
+            "value": "US-ADS-PENN-WLC01"
+          },
+          {
+            "value": "US-ADS-SACR-WLC01"
+          },
+          {
+            "value": "US-ADS-LEXI-WLC01"
+          },
+          {
+            "value": "US-ADS-SAND-WLC01"
+          },
+          {
+            "value": "US-ADS-LEXI-WLC02"
+          },
+          {
+            "value": "US-ADS-SAND-WLC02"
+          },
+          {
+            "value": "US-ADS-PITT-WLC01"
+          },
+          {
+            "value": "US-ADS-DULL-WLC01"
+          },
+          {
+            "value": "US-ADS-SACR-WLC02"
+          },
+          {
+            "value": "US-ADS-PENN-WLC02"
+          },
+          {
+            "value": "US-ADS-TAMP-WLC02"
+          },
+          {
+            "value": "US-ADS-TAMP-WLC01"
+          },
+          {
+            "value": "US-ADS-LOS2-WLC02"
+          },
+          {
+            "value": "US-ADS-LOS2-WLC01"
+          },
+          {
+            "value": "US-ADS-COLO-WLC01"
+          },
+          {
+            "value": "US-ADS-COLO-WLC02"
+          },
+          {
+            "value": "CA-ADS-EDMT-WLC01"
+          },
+          {
+            "value": "CA-ADS-EDMT-WLC02"
+          },
+          {
+            "value": "CA-ADS-HALI-WLC02"
+          },
+          {
+            "value": "CA-ADS-HALI-WLC01"
+          },
+          {
+            "value": "CA-ADS-STJN-WLC01"
+          },
+          {
+            "value": "US-ADS-SYR2-WLC02"
+          },
+          {
+            "value": "US-ADS-SYR2-WLC01"
+          },
+          {
+            "value": "CA-ADS-OTTA-WLC02"
+          },
+          {
+            "value": "CA-ADS-STJN-WLC02"
+          },
+          {
+            "value": "CA-ADS-OTTA-WLC01"
+          },
+          {
+            "value": "US-ADS-LASV-WLC01"
+          },
+          {
+            "value": "US-ADS-LASV-WLC02"
+          },
+          {
+            "value": "US-ADS-MEMP-WLC02"
+          },
+          {
+            "value": "US-ADS-MEMP-WLC01"
+          }
+        ],
+        "valueSelectionStrategy": "TOP_RESOLUTION"
+      }
+    ],
+    "voiceId": "0",
+    "childDirected": false,
+    "locale": "en-US",
+    "idleSessionTTLInSeconds": 60,
+    "clarificationPrompt": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Welcome to the Site Services Bot. You have provided information I do not understand.  Please type 'help' for more information."
+        }
+      ],
+      "maxAttempts": 5
+    },
+    "abortStatement": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Welcome to the Site Services Bot. You have provided information I do not understand.  Please type 'help' for more information."
+        }
+      ]
+    },
+    "detectSentiment": false,
+    "enableModelImprovements": true
+  }
+}

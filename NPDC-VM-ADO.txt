@@ -1,0 +1,24 @@
+vsphere_server = "s-vcenter-101.adesa.com"
+vsphere_datacenter = "NPDC"
+vsphere_compute_cluster = "NPDC-Windows"
+# - Only supply 1 reference for datastore
+# ----------------------------------------------------------------
+vsphere_datastore = "NPDC_VSI_ESX_WIN_PURE_0A_232"
+#vsphere_datastore_cluster = "Pure-0a-NPDC-VSI-WIN" # requires DRS
+# ----------------------------------------------------------------
+vm_network = "us-kar-npdc|vrf-internal-all|epg-esx-guests-919"
+template_name = "Hemi-Win2019-Template-New"
+vm_basename = "d-rahul-winDELETE" # must be under 11 characters total
+vm_folder = "/Discovered virtual machine"
+# for "vm_cpu", change this variable to the desired total number of vCPU
+vm_cpu = "4"
+# for "vm_cores_per_socket" This variable must remain 2 as our hosts only have two sockets.
+vm_cores_per_socket = "2"
+vm_memory = "18432"
+vm_domain = "adesa.com"
+vm_guest_id = "windows9Server64Guest"
+is_windows_image  = "true"
+vm_disk_size = "153600"
+join_domain = "true"
+instance_count = "1"
+vm_basenumber = "100"
