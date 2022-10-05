@@ -1,0 +1,14 @@
+wlan ssid-profile "KAR-Guest"
+    essid "KAR-Guest"
+    wpa-passphrase "KAR111HQ"
+    opmode wpa2-psk-aes
+!
+wlan ssid-profile "TradeRev"
+    essid "TradeRev"
+    wpa-passphrase "LD2tngTm7!mgK#f="
+    opmode wpa2-psk-aes
+!
+wlan ssid-profile "TradeRev-Guest"
+    essid "TradeRev-Guest"
+    wpa-passphrase "Tr3deR4v!"
+    opmode wpa2-psk-aes
