@@ -1,0 +1,104 @@
+vpn 1
+ name internal-data
+ service FW interface ipsec1
+ interface ge2/1.131
+  description "Connection to MDF"
+  ip address 10.131.37.11/24
+  no shutdown
+  vrrp 131
+   priority 110
+   ipv4 10.131.37.10
+  !
+ !
+
+
+Aborted: 'vpn 1 service FW interface' (value "ipsec1"): Only a gre interface can be assigned
+ interface gre1
+  description        "Primary GRE to Zscaler"
+  ip address 172.20.88.65/30
+  tunnel-source      206.223.189.238
+  tunnel-destination 165.225.36.36
+  tcp-mss-adjust     1360
+  shutdown
+ !
+ interface gre2
+  description        "Secondary GRE to Zscaler"
+  ip address 172.20.88.69/30
+  tunnel-source      206.223.189.238
+  tunnel-destination 165.225.39.26
+  tcp-mss-adjust     1360
+  shutdown
+
+
+ interface ipsec1
+  ip address 172.20.88.65/30
+  tunnel-source-interface ge2/0
+  tunnel-destination      165.225.36.37
+  ike
+   version      1
+   mode         aggressive
+   rekey        86400
+   cipher-suite aes128-cbc-sha1
+   group        2
+   authentication-type
+    pre-shared-key
+     pre-shared-secret NOpasswd4u
+     local-id          testvpntunnel@adesa.com
+     remote-id         165.225.36.37
+    !
+   !
+  !
+  ipsec
+   rekey                   28800
+   replay-window           512
+   cipher-suite            aes256-gcm
+   perfect-forward-secrecy group-2
+  !
+  no shutdown
+ip route 165.225.36.37/32 206.223.189.233
+
+
+ip route 165.225.36.36/32 206.223.189.233
+ ip route 165.225.39.26/32 206.223.189.233
+
+
+
+
+ interface ipsec1
+  ip address 172.20.88.65/30
+  tunnel-source-interface ge2/0
+  tunnel-destination      165.225.208.48
+  ike
+   version      1
+   mode         aggressive
+   rekey        86400
+   cipher-suite aes128-cbc-sha1
+   group        2
+   authentication-type
+    pre-shared-key
+     pre-shared-secret NOpasswd4u
+     local-id          testvpntunnel@adesa.com
+     remote-id         165.225.208.48
+
+
+ca-traderev-tret-vedge-a#
+ca-traderev-tret-vedge-a# config t
+Entering configuration mode terminal
+ca-traderev-tret-vedge-a(config)# vpn 0
+ca-traderev-tret-vedge-a(config-vpn-0)# interface ipsec1
+ca-traderev-tret-vedge-a(config-interface-ipsec1)# shut
+ca-traderev-tret-vedge-a(config-interface-ipsec1)# commit
+Commit complete.
+ca-traderev-tret-vedge-a(config-interface-ipsec1)# int gre2
+ca-traderev-tret-vedge-a(config-interface-gre2)# no shut
+ca-traderev-tret-vedge-a(config-interface-gre2)# commit
+Commit complete.
+ca-traderev-tret-vedge-a(config-interface-gre2)# vpn 1
+ca-traderev-tret-vedge-a(config-vpn-1)# service FW interface gre2
+ca-traderev-tret-vedge-a(config-vpn-1)# vpn 118
+ca-traderev-tret-vedge-a(config-vpn-118)# service FW interface gre2
+ca-traderev-tret-vedge-a(config-vpn-118)# commit
+Commit complete.
+ca-traderev-tret-vedge-a(config-vpn-118)# end
+ca-traderev-tret-vedge-a# sh gre
+

@@ -1,0 +1,532 @@
+(CA-KAR-TRET-WLC02) *#show confi
+
+
+version 8.3
+country us
+
+
+logging level warnings security subcat ids
+logging level warnings security subcat ids-ap
+
+wms
+ general poll-interval 60000
+ general poll-retries 3
+ general stat-update enable
+ general ap-ageout-interval 30
+ general sta-ageout-interval 30
+ general learn-ap disable
+ general persistent-known-interfering enable
+!
+
+adp discovery
+adp igmp-join
+adp igmp-vlan 0
+
+netservice svc-icmp 1
+netservice svc-esp 50
+netservice svc-gre 47
+netservice svc-svp 119
+netservice svc-ftp tcp 21
+netservice svc-ssh tcp 22
+netservice svc-smtp tcp 25
+netservice svc-telnet tcp 23
+netservice svc-dns udp 53
+netservice svc-dhcp udp 67 68
+netservice svc-bootp udp 67 69
+netservice svc-tftp udp 69
+netservice svc-http tcp 80
+netservice svc-kerberos udp 88
+netservice svc-pop3 tcp 110
+netservice svc-ntp udp 123
+netservice svc-msrpc-udp udp 135 139
+netservice svc-msrpc-tcp tcp 135 139
+netservice svc-snmp udp 161
+netservice svc-snmp-trap udp 162
+netservice svc-smb-udp udp 445
+netservice svc-smb-tcp tcp 445
+netservice svc-https tcp 443
+netservice svc-ike udp 500
+netservice svc-rtsp tcp 554
+netservice svc-nterm tcp 1026 1028
+netservice svc-l2tp udp 1701
+netservice svc-pptp tcp 1723
+netservice svc-sccp tcp 2000 alg sccp
+netservice svc-natt udp 4500
+netservice svc-vocera udp 5002 alg vocera
+netservice svc-sip-udp udp 5060 alg sip
+netservice svc-sip-tcp tcp 5060 alg sip
+netservice svc-sips tcp 5061 alg sips
+netservice svc-facetime-tcp tcp 5223 alg facetime
+netservice svc-adp udp 8200
+netservice svc-papi udp 8211
+netservice svc-sec-papi udp 8209
+netservice svc-cfgm-tcp tcp 8211
+netservice svc-syslog udp 514
+netservice svc-noe udp 32512 alg noe
+netservice svc-noe-oxo udp 5000 alg noe
+netservice svc-http-proxy1 tcp 3128
+netservice svc-http-proxy2 tcp 8080
+netservice svc-http-proxy3 tcp 8888
+netservice svc-h323-tcp tcp 1720 alg h323
+netservice svc-h323-udp udp 1718 1719 alg h323
+netservice svc-v6-icmp 58
+netservice svc-v6-dhcp udp 546 547
+netservice svc-netbios-dgm udp 138
+netservice svc-netbios-ns udp 137
+netservice svc-netbios-ssn tcp 139
+netservice svc-microsoft-ds tcp 445
+netservice svc-lpd tcp 515
+netservice svc-ipp-tcp tcp 631
+netservice svc-ipp-udp udp 631
+netservice svc-citrix tcp 2598
+netservice svc-ica tcp 1494
+netservice svc-vmware-rdp tcp 3389
+netservice svc-pcoip-tcp tcp 50002
+netservice svc-pcoip-udp udp 50002
+netservice svc-pcoip2-tcp tcp 4172
+netservice svc-pcoip2-udp udp 4172
+netservice vnc tcp 5900 5905
+netservice svc-web tcp list 80,443
+netdestination wificalling-block
+ name pub.3gppnetwork.org
+ name vowifi.com
+!
+
+netdestination6 ipv6-reserved-range
+  invert
+  network 2000::/3
+!
+ip access-list session allow-diskservices
+ any any svc-netbios-dgm permit
+ any any svc-netbios-ssn permit
+ any any svc-microsoft-ds permit
+ any any svc-netbios-ns permit
+!
+
+ip access-list session allow-printservices
+ any any svc-lpd permit
+ any any svc-ipp-tcp permit
+ any any svc-ipp-udp permit
+!
+
+ip access-list session control
+ user any udp 68 deny
+ any any svc-icmp permit
+ any any svc-dns permit
+ any any svc-papi permit
+ any any svc-sec-papi permit
+ any any svc-cfgm-tcp permit
+ any any svc-adp permit
+ any any svc-tftp permit
+ any any svc-dhcp permit
+ any any svc-natt permit
+ any any tcp 6633 permit
+!
+
+ip access-list session v6-control
+ ipv6 user any udp 546 deny
+ ipv6 any any svc-v6-icmp permit
+ ipv6 any any svc-dns permit
+ ipv6 any any svc-papi permit
+ ipv6 any any svc-sec-papi permit
+ ipv6 any any svc-cfgm-tcp permit
+ ipv6 any any svc-adp permit
+ ipv6 any any svc-tftp permit
+ ipv6 any any svc-dhcp permit
+ ipv6 any any svc-natt permit
+!
+
+ip access-list session logon-control
+ user any udp 68 deny
+ any any svc-icmp permit
+ any any svc-dns permit
+ any any svc-dhcp permit
+ any any svc-natt permit
+ any network 169.254.0.0 255.255.0.0 any deny
+ any network 240.0.0.0 240.0.0.0 any deny
+!
+
+ip access-list session ap-acl
+ any any udp 5000
+ any any udp 5555
+ any any svc-gre permit
+ any any svc-syslog permit
+ any user svc-snmp permit
+ user any svc-snmp-trap permit
+ user any svc-ntp permit
+ user any svc-ftp permit
+ user any sys-svc-telnet deny
+!
+
+ip access-list session v6-ap-acl
+ ipv6 any any svc-gre permit
+ ipv6 any any svc-syslog permit
+ ipv6 any user svc-snmp permit
+ ipv6 user any svc-snmp-trap permit
+ ipv6 user any svc-ntp permit
+ ipv6 user any svc-ftp permit
+!
+
+ap system-profile "default"
+!
+
+ip access-list session ap-uplink-acl
+ any any udp 68 permit
+ any any svc-icmp permit
+ any host 224.0.0.251 udp 5353 permit
+ ipv6 any any udp 546 permit
+ ipv6 any any svc-v6-icmp permit
+ ipv6 any host ff02::fb udp 5353 permit
+!
+
+ip access-list session allowall
+ any any any permit
+ ipv6 any any any permit
+!
+
+ip access-list session captiveportal
+ user alias controller svc-https dst-nat 8081
+ user any svc-http dst-nat 8080
+ user any svc-https dst-nat 8081
+ user any svc-http-proxy1 dst-nat 8088
+ user any svc-http-proxy2 dst-nat 8088
+ user any svc-http-proxy3 dst-nat 8088
+!
+
+ip access-list session captiveportal6
+  ipv6  user   alias controller6 svc-https  captive
+  ipv6  user any svc-http  captive
+  ipv6  user any svc-https  captive
+  ipv6  user any svc-http-proxy1  captive
+  ipv6  user any svc-http-proxy2  captive
+  ipv6  user any svc-http-proxy3  captive
+!
+
+ip access-list session cplogout
+ user alias controller svc-https dst-nat 8081
+!
+
+ip access-list session vpnlogon
+ user any svc-ike permit
+ user any svc-esp permit
+ any any svc-l2tp permit
+ any any svc-pptp permit
+ any any svc-gre permit
+!
+
+ip access-list session srcnat
+ user any any src-nat
+!
+
+ip access-list session sip-acl
+ any any svc-sip-udp permit queue high
+ any any svc-sip-tcp permit queue high
+!
+
+ip access-list session svp-acl
+ any any svc-svp permit queue high
+ user host 224.0.1.116 any permit
+!
+
+ip access-list session vocera-acl
+ any any svc-vocera permit queue high
+!
+
+ip access-list session wificalling-acl
+ any any tcp 443 permit
+!
+
+ip access-list session wificalling-block
+ any alias wificalling-block any deny
+!
+
+ip access-list session noe-acl
+ any any svc-noe permit queue high
+!
+
+ip access-list session skinny-acl
+ any any svc-sccp permit queue high
+!
+
+ip access-list session h323-acl
+ any any svc-h323-tcp permit queue high
+ any any svc-h323-udp permit queue high
+!
+
+ip access-list session skype4b-acl
+ any any svc-sips permit
+ any any svc-https permit
+!
+
+ip access-list session facetime-acl
+ any any tcp svc-http permit
+ any any tcp svc-https permit
+ any any svc-facetime-tcp permit queue high
+ any any udp 3478 3497 permit
+ any any udp 16384 16387 permit
+ any any udp 16393 16402 permit
+!
+
+ip access-list session dhcp-acl
+ any any svc-dhcp permit
+!
+
+ip access-list session icmp-acl
+ any any svc-icmp permit
+!
+
+ip access-list session tftp-acl
+ any any svc-tftp permit
+!
+
+ip access-list session dns-acl
+ any any svc-dns permit
+!
+
+ip access-list session http-acl
+ any any svc-http permit
+!
+
+ip access-list session https-acl
+ any any svc-https permit
+!
+
+ip access-list session v6-logon-control
+ ipv6 user any udp 546 deny
+ ipv6 any any svc-v6-icmp permit
+ ipv6 any any svc-v6-dhcp permit
+ ipv6 any any svc-dns permit
+ ipv6 any network fc00::/7 any permit
+ ipv6 any network fe80::/64 any permit
+ ipv6 any alias ipv6-reserved-range any deny
+!
+
+ip access-list session v6-dhcp-acl
+ ipv6 any any svc-v6-dhcp permit
+!
+
+ip access-list session v6-icmp-acl
+ ipv6 any any svc-v6-icmp permit
+!
+
+ip access-list session v6-dns-acl
+ ipv6 any any svc-dns permit
+!
+
+ip access-list session ra-guard
+  ipv6  user any icmpv6 rtr-adv  deny
+!
+
+ip access-list session v6-http-acl
+ ipv6 any any svc-http permit
+!
+
+ip access-list session v6-https-acl
+ ipv6 any any svc-https permit
+!
+
+ip access-list session v6-allowall
+ ipv6 any any any permit
+!
+
+ip access-list session citrix-acl
+ any any svc-citrix permit tos 46 dot1p-priority 6
+ any any svc-ica permit tos 46 dot1p-priority 6
+!
+
+ip access-list session vmware-acl
+ any any svc-vmware-rdp permit tos 46 dot1p-priority 6
+ any any svc-pcoip-tcp permit tos 46 dot1p-priority 6
+ any any svc-pcoip-udp permit tos 46 dot1p-priority 6
+ any any svc-pcoip2-tcp permit tos 46 dot1p-priority 6
+ any any svc-pcoip2-udp permit tos 46 dot1p-priority 6
+!
+
+ip access-list session jabber-acl
+ any any tcp 5222 permit
+ any any tcp 8443 permit
+!
+
+ip access-list session voip-applications-acl
+ any any app alg-skype4b-audio permit
+ any any app alg-skype4b-video permit
+ any any app alg-skype4b-desktop-sharing permit
+ any any app alg-skype4b-app-sharing permit
+ any any app alg-sip-audio permit
+ any any app alg-sip-video permit
+ any any app alg-sccp permit
+ any any app alg-vocera permit
+ any any app alg-noe permit
+ any any app alg-h323 permit
+ any any app alg-jabber-audio permit
+ any any app alg-jabber-video permit
+ any any app alg-jabber-desktop-sharing permit
+ any any app alg-facetime permit
+ any any app alg-wifi-calling permit
+ any any app alg-rtp permit
+!
+
+user-role authenticated
+ access-list session ra-guard
+ access-list session allowall
+ access-list session v6-allowall
+!
+
+user-role default-vpn-role
+ access-list session ra-guard
+ access-list session allowall
+ access-list session v6-allowall
+!
+
+user-role logon
+ access-list session ra-guard
+ access-list session logon-control
+ access-list session captiveportal
+ access-list session vpnlogon
+ access-list session v6-logon-control
+ access-list session captiveportal6
+!
+
+user-role guest-logon
+ access-list session ra-guard
+ access-list session logon-control
+ access-list session captiveportal
+ access-list session v6-logon-control
+ access-list session captiveportal6
+ captive-portal default
+!
+
+user-role ap-role
+ access-list session ra-guard
+ access-list session control
+ access-list session ap-acl
+ access-list session v6-control
+ access-list session v6-ap-acl
+!
+
+user-role voice
+ access-list session ra-guard
+ access-list session sip-acl
+ access-list session noe-acl
+ access-list session svp-acl
+ access-list session vocera-acl
+ access-list session skinny-acl
+ access-list session h323-acl
+ access-list session dhcp-acl
+ access-list session tftp-acl
+ access-list session dns-acl
+ access-list session icmp-acl
+ access-list session http-acl
+ access-list session https-acl
+ access-list session skype4b-acl
+ access-list session facetime-acl
+ access-list session jabber-acl
+ access-list session wificalling-acl
+ access-list session voip-applications-acl
+!
+
+user-role guest
+ access-list session ra-guard
+ access-list session http-acl
+ access-list session https-acl
+ access-list session dhcp-acl
+ access-list session icmp-acl
+ access-list session dns-acl
+ access-list session v6-http-acl
+ access-list session v6-https-acl
+ access-list session v6-dhcp-acl
+ access-list session v6-icmp-acl
+ access-list session v6-dns-acl
+!
+
+aaa tacacs-accounting
+!
+
+aaa server-group default
+ auth-server Internal
+ set role condition role value-of
+!
+aaa authentication vpn default
+ default-role default-vpn-role
+!
+aaa authentication vpn default-rap
+ default-role default-vpn-role
+!
+crypto isakmp policy 20
+  encryption aes256
+!
+crypto ipsec transform-set default-aes esp-aes256 esp-sha-hmac
+crypto dynamic-map default-dynamicmap 10000
+  set transform-set default-transform default-aes
+!
+vpdn group l2tp
+vpdn group pptp
+
+user-role default-via-role
+ access-list session allowall
+ access-list session v6-allowall
+!
+
+aaa authentication via auth-profile "default"
+!
+
+rf arm-profile "arm-scan"
+!
+
+rf arm-profile "arm-maintain"
+assignment maintain
+no scanning
+!
+
+rf dot11a-radio-profile "rp-scan-a"
+arm-profile "arm-scan"
+!
+
+rf dot11a-radio-profile "rp-maintain-a"
+arm-profile "arm-maintain"
+!
+
+rf dot11a-radio-profile "rp-monitor-a"
+mode am-mode
+!
+
+rf dot11g-radio-profile "rp-scan-g"
+arm-profile "arm-scan"
+!
+
+rf dot11g-radio-profile "rp-maintain-g"
+arm-profile "arm-maintain"
+!
+
+rf dot11g-radio-profile "rp-monitor-g"
+mode am-mode
+!
+
+time-range periodic working-hours
+ weekday 08:00 to  18:00
+!
+
+time-range periodic night-hours
+ weekday 18:01 to 23:59
+ weekday 00:00 to 07:59
+!
+
+time-range periodic weekend periodic
+  weekend 00:00 to 23:59
+!
+
+
+firewall
+!
+
+ip probe default
+!
+ip probe health-check
+!
+hostname "CA-KAR-TRET-WLC02"
+
+clock timezone America/Indiana/Indianapolis
+
+mgmt-user admin root a136a59501a828cdf970cbf569dd0a14b5aa131f522eb3e8ba
+
+end

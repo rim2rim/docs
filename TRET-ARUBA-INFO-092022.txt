@@ -1,0 +1,342 @@
+10.129.37.12
+(CA-KAR-TRET-WLC02) *#show mac-address-table
+
+Dynamic Address Count:           0
+Static Address (User-defined) Count:             0
+System Self Address Count:               0
+Total MAC  Addresses :           10
+Maximum MAC addresses :                  10
+MAC Address Table
+------------------
+Destination Address  Address Type  VLAN  Destination Port
+-------------------  ------------  ----  ----------------
+20:4c:03:00:00:00    Mgmt          1     vlan 1
+20:4c:03:2a:80:cc    Mgmt          1     vlan 1
+20:4c:03:00:00:00    Mgmt          118   vlan 118
+20:4c:03:2a:80:cc    Mgmt          118   vlan 118
+20:4c:03:00:00:00    Mgmt          128   vlan 128
+20:4c:03:2a:80:cc    Mgmt          128   vlan 128
+20:4c:03:00:00:00    Mgmt          129   vlan 129
+20:4c:03:2a:80:cc    Mgmt          129   vlan 129
+20:4c:03:00:00:00    Mgmt          4095  vlan 4095
+20:4c:03:2a:80:cc    Mgmt          4095  vlan 4095
+
+
+(CA-KAR-TRET-WLC02) *#show vlan status
+
+Vlan Status
+-----------
+VlanId  IPAddress                   Adminstate  Operstate  PortCount  Nat Inside  Mode     Ports               AAA Profile  Option-82
+------  ---------                   ----------  ---------  ---------  ----------  ----     -----               -----------  ---------
+1       unassigned/unassigned       Enabled     Down       8          Disabled    Regular  GE0/0/4-0/7 Pc1-7   N/A          Disabled
+116     N/A                         N/A         N/A        1          Disabled    Regular  Pc0                 N/A          Disabled
+118     unassigned/unassigned       Enabled     Up         1          Enabled     Regular  Pc0                 N/A          Disabled
+128     unassigned/unassigned       Enabled     Up         1          Enabled     Regular  Pc0                 N/A          Disabled
+129     10.129.37.12/255.255.255.0  Enabled     Up         1          Enabled     Regular  Pc0                 N/A          Disabled
+
+(CA-KAR-TRET-WLC02) *#show interface
+
+GE 0/0/0 is up, line protocol is up
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:CD (bia 20:4C:03:2A:80:CD)
+Description: GE0/0/0 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+Negotiated: Duplex (Full), speed (1000 Mbps)
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 11 sec
+link status last changed 209 day 15 hr 31 min 3 sec
+    5437166897 packets input, 1743250366143 bytes
+    Received 1122468694 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    1103906577 multicast, 4314698203 unicast
+    9581171438 packets output, 6600435399863 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is TRUSTED
+
+GE 0/0/1 is up, line protocol is up
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:CE (bia 20:4C:03:2A:80:CE)
+Description: GE0/0/1 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+Negotiated: Duplex (Full), speed (1000 Mbps)
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 11 sec
+link status last changed 209 day 15 hr 31 min 3 sec
+    7524990854 packets input, 3725846968998 bytes
+    Received 1845575454 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    1801929118 multicast, 5679415400 unicast
+    9702368401 packets output, 6305636415882 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is NOT TRUSTED
+
+GE 0/0/2 is up, line protocol is up
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:CF (bia 20:4C:03:2A:80:CF)
+Description: GE0/0/2 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+Negotiated: Duplex (Full), speed (1000 Mbps)
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 25 sec
+link status last changed 209 day 15 hr 31 min 17 sec
+    6993120463 packets input, 3221672680263 bytes
+    Received 1694856937 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    1645494759 multicast, 5298263526 unicast
+    11378850064 packets output, 8191835737689 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is NOT TRUSTED
+
+GE 0/0/3 is up, line protocol is up
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:D0 (bia 20:4C:03:2A:80:D0)
+Description: GE0/0/3 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+Negotiated: Duplex (Full), speed (1000 Mbps)
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 25 sec
+link status last changed 209 day 15 hr 31 min 17 sec
+    19070199403 packets input, 15534339244536 bytes
+    Received 1385914707 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    1356808034 multicast, 17684284696 unicast
+    9828202311 packets output, 5966932751901 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is NOT TRUSTED
+
+GE 0/0/4 is up, line protocol is down
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:D1 (bia 20:4C:03:2A:80:D1)
+Description: GE0/0/4 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 34 sec
+link status last changed 1030 day 18 hr 25 min 34 sec
+    0 packets input, 0 bytes
+    Received 0 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    0 multicast, 0 unicast
+    0 packets output, 0 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is NOT TRUSTED
+
+GE 0/0/5 is up, line protocol is down
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:D2 (bia 20:4C:03:2A:80:D2)
+Description: GE0/0/5 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 34 sec
+link status last changed 1030 day 18 hr 25 min 34 sec
+    0 packets input, 0 bytes
+    Received 0 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    0 multicast, 0 unicast
+    0 packets output, 0 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is NOT TRUSTED
+
+GE 0/0/6 is up, line protocol is down
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:D3 (bia 20:4C:03:2A:80:D3)
+Description: GE0/0/6 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 35 sec
+link status last changed 1030 day 18 hr 25 min 35 sec
+    0 packets input, 0 bytes
+    Received 0 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    0 multicast, 0 unicast
+    0 packets output, 0 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is NOT TRUSTED
+
+GE 0/0/7 is up, line protocol is down
+Hardware is Gigabit Ethernet, address is 20:4C:03:2A:80:D4 (bia 20:4C:03:2A:80:D4)
+Description: GE0/0/7 (RJ45 Connector)
+Encapsulation ARPA, loopback not set
+Configured: Duplex ( AUTO ), speed ( AUTO )
+MTU 1500 bytes, BW is 1000 Mbit
+Last clearing of "show interface" counters 1030 day 18 hr 25 min 35 sec
+link status last changed 1030 day 18 hr 25 min 35 sec
+    0 packets input, 0 bytes
+    Received 0 broadcasts, 0 runts, 0 giants, 0 throttles
+    0 input error bytes, 0 CRC, 0 frame
+    0 multicast, 0 unicast
+    0 packets output, 0 bytes
+    0 output errors bytes, 0 deferred
+    0 collisions, 0 late collisions, 0 throttles
+This port is NOT TRUSTED
+
+
+(CA-KAR-TRET-WLC02) *#show ap database
+
+AP Database
+-----------
+Name                   Group     AP Type  IP Address     Status               Flags  Switch IP     Standby IP
+----                   -----     -------  ----------     ------               -----  ---------     ----------
+80:8d:b7:c7:9d:c8      TradeRev  315      10.129.37.242  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:a4:38      TradeRev  315      10.129.37.248  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:a8:ee      TradeRev  315      10.129.37.212  Up 2h:49m:23s        2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:a9:d4      TradeRev  315      10.129.37.245  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ab:3e      TradeRev  315      10.129.37.236  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ab:d8      TradeRev  315      10.129.37.209  Up 2h:49m:19s        2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ac:b2      TradeRev  315      10.129.37.234  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ad:84      TradeRev  315      10.129.37.214  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ad:f2      TradeRev  315      10.129.37.243  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ae:60      TradeRev  315      10.129.37.230  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ae:96      TradeRev  315      10.129.37.241  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ae:b0      TradeRev  315      10.129.37.235  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:b1:6c      TradeRev  315      10.129.37.226  Up 135d:14h:23m:25s  2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:b1:9c      TradeRev  315      10.129.37.228  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:b2:28      TradeRev  315      10.129.37.221  Up 135d:14h:23m:25s  2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:b4:e4      TradeRev  315      10.129.37.220  Up 2h:49m:24s        2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:b7:5e      TradeRev  315      10.129.37.222  Up 2h:49m:19s        2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:b8:2c      TradeRev  315      10.129.37.238  Up 135d:14h:23m:27s  2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:ba:3c      TradeRev  315      10.129.37.208  Up 2h:49m:18s        2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:be:bc      TradeRev  315      10.129.37.227  Down                 2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:c1:c0      TradeRev  315      10.129.37.215  Up 135d:14h:23m:27s  2      10.129.37.12  0.0.0.0
+80:8d:b7:c7:c1:ca      TradeRev  315      10.129.37.231  Down                 2      10.129.37.12  0.0.0.0
+CA-KAR-TRET-FLR6-AP02  TradeRev  228      10.129.37.235  Down                 2      10.129.37.12  0.0.0.0
+CA-KAR-TRET-FLR6-AP03  TradeRev  215      10.129.37.211  Down                 2      10.129.37.12  0.0.0.0
+CA-KAR-TRET-FLR6-AP04  TradeRev  325      10.129.37.249  Down                 2      10.129.37.12  0.0.0.0
+
+Flags: 1 = 802.1x authenticated AP use EAP-PEAP; 1+ = 802.1x use EST; 1- = 802.1x use factory cert; 2 = Using IKE version 2
+       B = Built-in AP; C = Cellular RAP; D = Dirty or no config
+       E = Regulatory Domain Mismatch; F = AP failed 802.1x authentication
+       G = No such group; I = Inactive; J = USB cert at AP; L = Unlicensed
+       M = Mesh node
+       N = Duplicate name; P = PPPoe AP; R = Remote AP; R- = Remote AP requires Auth;
+       S = Standby-mode AP; U = Unprovisioned; X = Maintenance Mode
+       Y = Mesh Recovery
+       c = CERT-based RAP; e = Custom EST cert; f = No Spectrum FFT support
+       i = Indoor; o = Outdoor; s = LACP striping; u = Custom-Cert RAP; z = Datazone AP
+
+Total APs:25
+
+(CA-KAR-TRET-WLC02) *#show ip interface brief
+
+Interface                   IP Address / IP Netmask        Admin   Protocol   VRRP-IP
+vlan 129                  10.129.37.12 / 255.255.255.0     up      up         10.129.37.13
+vlan 1                      unassigned / unassigned        up      down
+vlan 118                    unassigned / unassigned        up      up
+vlan 128                    unassigned / unassigned        up      up
+loopback                    unassigned / unassigned        up      up
+
+(CA-KAR-TRET-WLC02) *#show vrrp stats all
+
+Virtual Router 129:
+
+   Admin State UP, VR State MASTER
+
+   Advertisements:
+   Sent:                         88865705   Received:                         8
+   Zero priority sent:                  0   Zero priority received:           0
+   Lower IP address received            8   Lower Priority received           0
+   Tracking priority overflow:          0
+   Advertisements received errors:
+      Interval mismatch                 0   Invalid TTL                       0
+      Invalid packet type               0   Authentication failure            0
+      Invalid auth type                 0   Mismatch auth type                0
+      Invalid VRRP IP address           0   Invalid packet length             0
+   VRRP Up timestamp:                       Sat Nov 23 19:29:26 2019
+   Master Up timestamp:                     Sat Nov 23 19:29:29 2019
+   Last advertisement sent timestamp:       Tue Sep 20 14:22:08 2022
+   Last advertisement received timestamp:   never
+   Current time:                            Tue Sep 20 14:22:09 2022
+   Number times became VRRP Master:         1
+
+(CA-KAR-TRET-WLC02) *#show vrrp
+
+
+Virtual Router 129:
+    Description
+    Admin State UP, VR State MASTER
+    IP Address 10.129.37.13, MAC Address 00:00:5e:00:01:81, vlan 129
+    Priority 100, Advertisement 1 sec, Preemption Enable Delay 0
+    Auth type PASSWORD, Auth data: ********
+    tracking is not enabled
+
+
+10.129.37.11
+(CA-KAR-TRET-WLC01) *#show ap database
+
+AP Database
+-----------
+Name                   Group     AP Type  IP Address     Status               Flags  Switch IP     Standby IP
+----                   -----     -------  ----------     ------               -----  ---------     ----------
+80:8d:b7:c7:a8:ee      TradeRev  315      10.129.37.212  Down                 2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:ab:d8      TradeRev  315      10.129.37.209  Down                 2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:ae:60      TradeRev  315      10.129.37.230  Up 2h:54m:42s        2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:ae:c0      TradeRev  315      10.129.37.229  Down                 2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:b1:9c      TradeRev  315      10.129.37.228  Up 2h:54m:43s        2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:b7:5e      TradeRev  315      10.129.37.222  Down                 2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:ba:3c      TradeRev  315      10.129.37.208  Down                 2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:ba:86      TradeRev  315      10.129.37.246  Up 135d:14h:28m:43s  2      10.129.37.11  0.0.0.0
+80:8d:b7:c7:be:72      TradeRev  315      10.129.37.247  Up 135d:14h:28m:43s  2      10.129.37.11  0.0.0.0
+CA-KAR-TRET-FLR6-AP05  TradeRev  325      10.129.37.213  Down                 2      10.129.37.11  0.0.0.0
+
+Flags: 1 = 802.1x authenticated AP use EAP-PEAP; 1+ = 802.1x use EST; 1- = 802.1x use factory cert; 2 = Using IKE version 2
+       B = Built-in AP; C = Cellular RAP; D = Dirty or no config
+       E = Regulatory Domain Mismatch; F = AP failed 802.1x authentication
+       G = No such group; I = Inactive; J = USB cert at AP; L = Unlicensed
+       M = Mesh node
+       N = Duplicate name; P = PPPoe AP; R = Remote AP; R- = Remote AP requires Auth;
+       S = Standby-mode AP; U = Unprovisioned; X = Maintenance Mode
+       Y = Mesh Recovery
+       c = CERT-based RAP; e = Custom EST cert; f = No Spectrum FFT support
+       i = Indoor; o = Outdoor; s = LACP striping; u = Custom-Cert RAP; z = Datazone AP
+
+Total APs:10
+
+(CA-KAR-TRET-WLC01) *#show ip interface brief
+
+Interface                   IP Address / IP Netmask        Admin   Protocol   VRRP-IP
+vlan 129                  10.129.37.11 / 255.255.255.0     up      up         10.129.37.13
+vlan 1                      unassigned / unassigned        up      down
+vlan 118                    unassigned / unassigned        up      up
+vlan 128                    unassigned / unassigned        up      up
+loopback                    unassigned / unassigned        up      up
+
+(CA-KAR-TRET-WLC01) *#show vrrp stats all
+
+Virtual Router 129:
+
+   Admin State UP, VR State BACKUP
+
+   Advertisements:
+   Sent:                             6343   Received:                  22853226
+   Zero priority sent:                  0   Zero priority received:           0
+   Lower IP address received            0   Lower Priority received           0
+   Tracking priority overflow:          0
+   Advertisements received errors:
+      Interval mismatch                 0   Invalid TTL                       0
+      Invalid packet type               0   Authentication failure            0
+      Invalid auth type                 0   Mismatch auth type                0
+      Invalid VRRP IP address           0   Invalid packet length             0
+   VRRP Up timestamp:                       Wed Dec 29 09:50:27 2021
+   Master Up timestamp:                     N/A, not MASTER
+   Last advertisement sent timestamp:       Tue Feb 22 22:11:56 2022
+   Last advertisement received timestamp:   Tue Sep 20 14:26:13 2022
+   Current time:                            Tue Sep 20 14:26:13 2022
+   Number times became VRRP Master:         2
+
+(CA-KAR-TRET-WLC01) *#show vrrp
+
+
+Virtual Router 129:
+    Description
+    Admin State UP, VR State BACKUP
+    IP Address 10.129.37.13, MAC Address 00:00:5e:00:01:81, vlan 129
+    Priority 100, Advertisement 1 sec, Preemption Enable Delay 0
+    Auth type PASSWORD, Auth data: ********
+    tracking is not enabled
+
