@@ -1,0 +1,117 @@
+
+ca-traderev-tret-vedge-a# show policy app-route-policy-filter                                                                                                                                                               
+% No entries found.
+
+
+ca-traderev-tret-vedge-a# show policy data-policy-filter                                                                                                                                                                                                                      
+                                             COUNTER                  POLICER  OOS      OOS                                                                                                                                 
+NAME                              NAME       NAME     PACKETS  BYTES  NAME     PACKETS  BYTES                                                                                                                               
+-----------------------------------------------------------------------------------------------                                                                                                                             
+_vpn-internal_remote-_2047222058  vpn-guest
+
+ca-traderev-tret-vedge-a# show policy qos-map-info                                                                                                                                                                                                                                                                                                                                                                                                  
+QOS MAP     INTERFACE                                                                                                                                                                                                       
+NAME        NAME                                                                                                                                                                                                            
+-----------------------                                                                                                                                                                                                     
+QOS_POLICY  ge2/2
+
+***********************************************************************************************************************************
+ca-traderev-tret-vedge-a# show policy service-path vpn 0 interface ge2/0 source-ip 10.37.19.238 dest-ip 165.225.208.48 protocol 16                                                                                         
+Next Hop: Remote                                                                                                                                                                                                            
+  Remote IP: 172.29.8.193, Interface ge2/2.200 Index: 10
+
+ca-traderev-tret-vedge-a# show policy service-path vpn 0 interface ge2/0 source-ip 10.37.19.238 dest-ip 8.5.128.75 protocol 16                                                                                              
+Next Hop: Remote                                                                                                                                                                                                            
+  Remote IP: 206.223.189.233, Interface ge2/0 Index: 4
+
+ca-traderev-tret-vedge-a# show policy service-path vpn 0 interface ge2/0 source-ip 10.37.19.238 dest-ip 172.18.65.173 protocol 16                                                                                           
+Next Hop: Remote                                                                                                                                                                                                            
+  Remote IP: 206.223.189.233, Interface ge2/0 Index: 4
+
+ca-traderev-tret-vedge-a# show policy service-path vpn 1 interface ge2/1.131 source-ip 10.37.19.238 dest-ip 172.18.65.173 protocol 16                                                                                       
+Next Hop: IPsec                                                                                                                                                                                                             
+  Source: 206.223.189.238 12346 Destination: 65.172.255.11 12346 Color: biz-internet
+
+ca-traderev-tret-vedge-a# show policy service-path vpn 1 interface ge2/1.131 source-ip 10.37.19.238 dest-ip 10.254.63.97 protocol 16                                                                                        
+Next Hop: IPsec                                                                                                                                                                                                             
+  Source: 206.223.189.238 12346 Destination: 12.89.45.146 12386 Color: biz-internet
+
+
+ca-traderev-tret-vedge-a# show running-config policy
+
+ca-traderev-tret-vedge-a# show policy qos-scheduler-info                                                                                                                                                                    
+                                                                                                                                                                                                                            
+QOS SCHEDULER  BANDWIDTH  BUFFER          QOS MAP                                                                                                                                                                           
+NAME           PERCENT    PERCENT  QUEUE  NAME                                                                                                                                                                              
+------------------------------------------------------                                                                                                                                                                      
+lai            20         20       1      QOS_POLICY                                                                                                                                                                        
+voice          15         15       0      QOS_POLICY                                                                                                                                                                        
+citrix         20         20       2      QOS_POLICY                                                                                                                                                                        
+external-web   20         20       4      QOS_POLICY                                                                                                                                                                        
+internal-web   20         20       3      QOS_POLICY                                                                                                                                                                        
+class-default  5          5        5      QOS_POLICY
+
+vpn 1                                                                                                                       
+ name internal-data                                             
+ service FW interface ipsec2                                                                  
+ interface ge2/1.131                                                         
+  description "Connection to MDF"                                                                 
+  ip address 10.131.37.11/24
+  no shutdown                                                         
+  vrrp 131                                                                        
+   priority 110                                                                           
+   ipv4 10.131.37.10                                                                      
+  !                                                                 
+ !                                                                       
+ interface loopback0                                                                
+  description Loopback                                                        
+  ip address 172.29.16.164/32                                                                                   
+  no shutdown                                                                                   
+ !                                                   
+ ip route 10.37.0.0/16 10.131.37.1
+ ip ipsec-route 10.37.16.0/22 vpn 0 interface ipsec2
+ omp                                                                
+  advertise connected                                                                   
+  advertise static                                                                                   
+ !                                                                                     
+!           
+
+show app cflowd flows vpn 1 src-ip 10.37.19.238
+
+Name:    ec2-3-233-146-120.compute-1.amazonaws.com
+Address:  3.233.146.120
+
+us-ads-indy-vedge-a# show app cflowd flows vpn 1 src-ip 10.127.13.166
+app cflowd flows vpn 1 src-ip 10.127.13.166 dest-ip 3.233.146.120 src-port 54276 dest-port 443 dscp 0 ip-proto 6
+ tcp-cntrl-bits    17
+ icmp-opcode       0
+ nhop-ip           104.129.206.38
+ total-pkts        11
+ total-bytes       2042
+ min-len           70
+ max-len           686
+ start-time        "Fri Nov 13 03:01:13 2020"
+ time-to-expire    57
+ egress-intf-name  ipsec2
+ ingress-intf-name ge0/6.131
+ app-id            68
+
+
+Name:    ec2-3-227-28-93.compute-1.amazonaws.com
+Address:  3.227.28.93
+
+us-ads-indy-vedge-a# show app cflowd flows vpn 1 src-ip 10.127.13.167
+app cflowd flows vpn 1 src-ip 10.127.13.167 dest-ip 3.227.28.93 src-port 41436 dest-port 443 dscp 0 ip-proto 6
+ tcp-cntrl-bits    24
+ icmp-opcode       0
+ nhop-ip           104.129.206.38
+ total-pkts        747
+ total-bytes       71217
+ min-len           70
+ max-len           569
+ start-time        "Fri Nov 13 02:00:35 2020"
+ time-to-expire    56
+ egress-intf-name  ipsec2
+ ingress-intf-name ge0/6.131
+ app-id            4
+

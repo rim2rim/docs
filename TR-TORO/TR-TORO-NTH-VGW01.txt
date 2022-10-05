@@ -1,0 +1,516 @@
+NTH-VGW01#show runn
+Building configuration...
+
+
+Current configuration : 13975 bytes
+!
+! Last configuration change at 16:16:25 EST Fri Jan 11 2019 by synadmin
+! NVRAM config last updated at 16:16:39 EST Fri Jan 11 2019 by synadmin
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname NTH-VGW01
+!
+boot-start-marker
+boot system flash:c2900-universalk9-mz.SPA.154-3.M3.bin
+boot-end-marker
+!
+!
+logging buffered 3000000
+enable secret 5 $1$d2BW$ZKCrye1MgFCqxkB7xidwP0
+!
+no aaa new-model
+clock timezone EST -5 0
+clock summer-time EST recurring
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name nthgen.local
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+cts logging verbose
+!
+!
+voice-card 0
+ dspfarm
+ dsp services dspfarm
+!
+!
+!
+voice service voip
+ allow-connections sip to sip
+ fax protocol t38 version 0 ls-redundancy 0 hs-redundancy 0 fallback none
+ sip
+!
+!
+!
+voice class server-group 1
+ ipv4 10.10.10.11 preference 1
+ ipv4 10.10.10.10 preference 2
+!
+voice class sip-options-keepalive 1
+ description Server Group SIP OPTIONS PING
+ up-interval 5
+ retry 1
+!
+!
+!
+!
+voice translation-rule 1
+ rule 1 /.*/ /6479331169/
+!
+voice translation-rule 411
+ rule 1 /^9\([2-8]11$\)/ /\1/
+!
+voice translation-rule 9000
+ rule 1 /^9\([2-9]..[2-9]......$\)/ /\1/
+!
+voice translation-rule 91000
+ rule 1 /^9\(1[2-9]..[2-9]......$\)/ /\1/
+!
+voice translation-rule 91800
+ rule 1 /91\(8[0-8][0-8].......$\)/ /\1/
+!
+voice translation-rule 92888
+ rule 1 /\+1\(.*\)/ /\1/
+!
+voice translation-rule 9011000
+ rule 1 /^9\(011.*\)/ /\1/
+!
+!
+voice translation-profile 4EMERG
+ translate calling 1
+!
+voice translation-profile 4INT
+ translate called 9011000
+!
+voice translation-profile 4LD
+ translate called 91000
+!
+voice translation-profile 4LOCAL
+ translate called 9000
+!
+voice translation-profile 4SERVICES
+ translate called 411
+!
+voice translation-profile 4TOLLFREE
+ translate calling 92888
+ translate called 91800
+!
+!
+!
+!
+application
+ global
+  service alternate DEFAULT
+ !
+!
+license udi pid CISCO2901/K9 sn FJC1919A39Q
+hw-module pvdm 0/0
+!
+!
+!
+username ehsan.nahangi privilege 15 secret 5 $1$LNVI$bOKggsQKMDnkkalodlxHZ.
+username ian.cho privilege 15 secret 5 $1$65rd$sqU7R1zYXMkvi2H3EQY23.
+username basil.afzal privilege 15 secret 5 $1$YqOr$PCQa23JLbpvQu19xpkTbb/
+username blair.levingbird privilege 15 secret 5 $1$R84R$S.w9.BjiJistmqmKMy.4K/
+username parneet.mann privilege 15 secret 5 $1$IOSA$fu66tWdKrfz/9sPAgjsfT0
+username synadmin privilege 15 secret 5 $1$8SxI$0Y70SLLSkj57gFOLyGl2n1
+username admin privilege 15 secret 5 $1$Aa6S$2/2Y.pEttwOBtvkdJF9C51
+!
+redundancy
+!
+!
+!
+class-map match-any VOIP_MEDIA
+ match ip dscp cs5  ef
+ match protocol rtp
+class-map match-any VOIP_SIGNAL
+ match ip dscp cs3  af31  af32  af33
+ match protocol sip
+ match protocol h323
+ match protocol mgcp
+ match protocol skinny
+!
+policy-map VOIP_OUT
+ class VOIP_MEDIA
+  set ip dscp ef
+  priority percent 33
+ class VOIP_SIGNAL
+  set ip dscp cs3
+  bandwidth 512
+policy-map VOIP_IN
+ class VOIP_MEDIA
+  set ip dscp ef
+ class VOIP_SIGNAL
+  set ip dscp cs3
+!
+!
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ description -= Uplink to TR-CORE-3850 Gi1/0/4 =-
+ ip address 10.150.254.3 255.255.255.0
+ ip nbar protocol-discovery ipv4
+ duplex auto
+ speed auto
+ service-policy input VOIP_IN
+ service-policy output VOIP_OUT
+!
+interface GigabitEthernet0/1
+ description -= Connection to SIP Service =-
+ ip address 172.25.254.142 255.255.255.252
+ duplex auto
+ speed auto
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip route 0.0.0.0 0.0.0.0 10.150.254.1
+ip route 172.24.0.0 255.255.255.0 172.25.254.141
+ip route 173.25.254.0 255.255.255.0 172.25.254.141
+!
+logging trap warnings
+logging host 10.10.10.60
+!
+!
+snmp-server community synnapexinc RO
+snmp-server community TrAdeREVro RO
+snmp-server community TrAdeREVrw RW
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+sccp local GigabitEthernet0/0
+sccp ccm 10.10.10.11 identifier 1 priority 1 version 7.0
+sccp ccm 10.10.10.10 identifier 2 priority 2 version 7.0
+sccp
+!
+sccp ccm group 1
+ associate ccm 1 priority 1
+ associate ccm 2 priority 2
+ associate profile 1 register SHEP-CFB
+!
+!
+!
+dspfarm profile 1 conference
+ codec g729br8
+ codec g729r8
+ codec g729abr8
+ codec g729ar8
+ codec g711alaw
+ codec g711ulaw
+ codec g722-64
+ maximum conference-participants 16
+ maximum sessions 2
+ associate application SCCP
+!
+dial-peer voice 1 voip
+ description -= Inbound from CUCM =-
+ session protocol sipv2
+ incoming called-number 9T
+ voice-class sip options-keepalive
+ voice-class sip bind control source-interface GigabitEthernet0/0
+ voice-class sip bind media source-interface GigabitEthernet0/0
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 2 voip
+ description -= Inbound from BeanField SIP Service =-
+ session protocol sipv2
+ incoming called-number 416.......$
+ voice-class sip options-keepalive
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 3 voip
+ description -= Inbound from BeanField SIP Service =-
+ session protocol sipv2
+ incoming called-number 647.......$
+ voice-class sip options-keepalive
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 4 voip
+ description -= Inbound from BeanField SIP Service =-
+ session protocol sipv2
+ incoming called-number 905.......$
+ voice-class sip options-keepalive
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 400416 voip
+ description -= Outbound to CUCM =-
+ destination-pattern 4169000941$
+ session protocol sipv2
+ session server-group 1
+ voice-class sip bind control source-interface GigabitEthernet0/0
+ voice-class sip bind media source-interface GigabitEthernet0/0
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 400647 voip
+ description -= Outbound to CUCM =-
+ destination-pattern 6479331169$
+ session protocol sipv2
+ session server-group 1
+ voice-class sip bind control source-interface GigabitEthernet0/0
+ voice-class sip bind media source-interface GigabitEthernet0/0
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 400905 voip
+ description -= Outbound to CUCM =-
+ destination-pattern 9055971774$
+ session protocol sipv2
+ session server-group 1
+ voice-class sip bind control source-interface GigabitEthernet0/0
+ voice-class sip bind media source-interface GigabitEthernet0/0
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 911 voip
+ description -= Outbound 911 to Beanfield SIP =-
+ translation-profile outgoing 4EMERG
+ destination-pattern 911$
+ session protocol sipv2
+ session target ipv4:172.24.0.38
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 29000 voip
+ description -= Outbound Local Dial to Beanfield SIP =-
+ translation-profile outgoing 4LOCAL
+ destination-pattern 9[2-9]..[2-9]......$
+ session protocol sipv2
+ session target ipv4:172.24.0.38
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 291000 voip
+ description -= Outbound Long Distance to Beanfield SIP =-
+ translation-profile outgoing 4LD
+ destination-pattern 91[2-9]..[2-9]......$
+ session protocol sipv2
+ session target ipv4:172.24.0.38
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 29011000 voip
+ description -= Outbound International to Beanfield SIP =-
+ translation-profile outgoing 4INT
+ destination-pattern 9011T
+ session protocol sipv2
+ session target ipv4:172.24.0.38
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 2411 voip
+ description -= Outbound Services to Beanfield SIP =-
+ translation-profile outgoing 4SERVICES
+ destination-pattern 9[2-8]11
+ session protocol sipv2
+ session target ipv4:172.24.0.38
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 1073741823 voip
+ description -= Inbound from BeanField SIP Service =-
+ session protocol sipv2
+ incoming called-number 437222017[78]$
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 1073741822 voip
+ description -= Outbound to CUCM =-
+ destination-pattern 437222017[78]$
+ session protocol sipv2
+ session server-group 1
+ voice-class sip bind control source-interface GigabitEthernet0/0
+ voice-class sip bind media source-interface GigabitEthernet0/0
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+dial-peer voice 22888 voip
+ description -= Outbound Toll Free to Beanfield SIP =-
+ translation-profile outgoing 4TOLLFREE
+ destination-pattern 918[0-8][0-8].......$
+ session protocol sipv2
+ session target ipv4:172.24.0.38
+ voice-class sip bind control source-interface GigabitEthernet0/1
+ voice-class sip bind media source-interface GigabitEthernet0/1
+ dtmf-relay rtp-nte sip-kpml sip-notify
+ codec g711ulaw
+ ip qos dscp cs3 signaling
+ no vad
+!
+!
+sip-ua
+ no remote-party-id
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+banner exec ^CC
+============================ Warning =======================================
+|                                                                          |
+|                    DON'T CHANGE PORT SETTINGS!!!                         |
+|                                                                          |
+|   If you don't know the consequence of your change, Please DO NOT try!   |
+|   Always type ? for Online help.                                         |
+|                                                                          |
+|                                                                          |
+|__________________________________________________________________________|
+^C
+banner login ^CCC
+
+============================ Warning ====================================
+|                                                                       |
+|  Any unauthorized access beyond this point may lead to prosecution!   |
+|                                                                       |
+| The programs and data stored on this system are licensed to or are    |
+| private property of this company and are lawfully available only to   |
+| authorized users for approved purposes.  Unauthorized access to any   |
+| program or data on this system is not permitted, and any unauthorized |
+| access beyond this point may lead to prosecution. This system may be  |
+| monitored at any time for operational reasons, therefore, if you are  |
+| not an authorized user,                                               |
+| DO NOT ATTEMPT TO LOG IN.                                             |
+|                                                                       |
+=========================================================================
+^C
+banner motd ^CC
+============================ Warning ====================================
+|                                                                       |
+|  Any unauthorized access beyond this point may lead to prosecution!   |
+|                                                                       |
+| The programs and data stored on this system are licensed to or are    |
+| private property of this company and are lawfully available only to   |
+| authorized users for approved purposes.  Unauthorized access to any   |
+| program or data on this system is not permitted, and any unauthorized |
+| access beyond this point may lead to prosecution. This system may be  |
+| monitored at any time for operational reasons, therefore, if you are  |
+| not an authorized user,                                               |
+| PLEASE LOG OUT.                                                       |
+|                                                                       |
+=========================================================================
+^C
+!
+line con 0
+ logging synchronous
+ login local
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ exec-timeout 60 0
+ logging synchronous
+ login local
+ length 0
+ transport input ssh
+line vty 5 15
+ logging synchronous
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+ntp update-calendar
+ntp server 10.150.254.1
+!
+end
+
+NTH-VGW01#

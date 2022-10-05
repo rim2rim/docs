@@ -1,0 +1,1134 @@
+CA-TR-TORO-SW01#show run
+Building configuration...
+
+Current configuration : 33331 bytes
+!
+! Last configuration change at 12:55:05 EDT Mon Jul 19 2021
+! NVRAM config last updated at 07:03:26 EDT Wed Sep 22 2021 by stephen.humphrey
+!
+version 15.2
+service nagle
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+service linenumber
+service compress-config
+!
+hostname CA-TR-TORO-SW01
+!
+boot-start-marker
+boot system switch all flash:cat3k_caa-universalk9.SPA.03.06.05.E.152-2.E5.bin
+boot-end-marker
+!
+!
+vrf definition Mgmt-vrf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+logging buffered 65535
+no logging console
+no logging monitor
+enable secret 5 $1$BaNT$Xnpil81NMeh2zC9UFCtzz1
+!
+username zenetra privilege 15 secret 5 $1$ZjOs$t/dc1qhSaC0miH9Mb/NsC/
+username maverick privilege 15 secret 5 $1$Llfs$Vy9Ke1QCF.bK3FKdyGIiK0
+aaa new-model
+!
+!
+aaa group server radius RADIUS-ISE
+ server name dc2-ise-plcy-01
+ server name ind02-ise-plcy-01
+!
+aaa authentication fail-message ^CAuthentication Failed; Try again.^C
+aaa authentication password-prompt **TACACS-DOWN-USE-LOCAL-LOGIN**
+aaa authentication login default group tacacs+ local
+aaa authentication enable default group tacacs+ enable
+aaa authentication ppp default none
+aaa authorization console
+aaa authorization exec default group tacacs+ none
+aaa authorization commands 0 default group tacacs+ none
+aaa authorization commands 1 default group tacacs+ none
+aaa authorization commands 15 default group tacacs+ none
+aaa accounting exec default start-stop group tacacs+
+aaa accounting commands 0 default start-stop group tacacs+
+aaa accounting commands 1 default start-stop group tacacs+
+aaa accounting commands 15 default start-stop group tacacs+
+aaa accounting system default start-stop group tacacs+
+!
+!
+!
+!
+!
+aaa server radius dynamic-author
+ client 172.27.91.171 server-key 7 08131F1A25151C5317081E573E
+ client 172.18.65.171 server-key 7 06345C756042105D0014005818
+!
+aaa session-id common
+clock timezone EST -5 0
+clock summer-time EDT recurring
+switch 1 provision ws-c3650-48pq
+!
+!
+!
+!
+!
+no ip source-route
+ip routing
+!
+no ip domain-lookup
+ip domain-name adesa.com
+!
+!
+qos queue-softmax-multiplier 100
+!
+table-map AutoQos-4.0-Trust-Cos-Table
+ default copy
+table-map AutoQos-4.0-Trust-Dscp-Table
+ default copy
+!
+!
+crypto pki trustpoint TP-self-signed-3900226581
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3900226581
+ revocation-check none
+ rsakeypair TP-self-signed-3900226581
+!
+!
+crypto pki certificate chain TP-self-signed-3900226581
+ certificate self-signed 01
+  3082023E 308201A7 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 33393030 32323635 3831301E 170D3135 31313131 31383438
+  32345A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 39303032
+  32363538 3130819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281
+  81009CA4 F79646C8 5285A6B2 C1F764A7 9D9BF14C C1A46DD4 2117368A 15C9D1E7
+  399CB635 9702F509 63A9615E 8E6CACEA E53BD5F1 E2C829AE 2D9371DB FE3DA132
+  E56ABE60 5C31EAF3 686D8396 B23DE524 7DBA954F BE86EF4B 14478103 CF22D724
+  8D2116BB B086F48B 9090C5E2 0FE2644E 7CA69ADE 85126256 004414BD 2613AEB3
+  B99B0203 010001A3 66306430 0F060355 1D130101 FF040530 030101FF 30110603
+  551D1104 0A300882 06537769 74636830 1F060355 1D230418 30168014 2B62A552
+  EBC43793 01D2E532 E7867247 89F04E3F 301D0603 551D0E04 1604142B 62A552EB
+  C4379301 D2E532E7 86724789 F04E3F30 0D06092A 864886F7 0D010104 05000381
+  81005A4A F23D49E5 2983F581 5D9866DB 09631EE7 03289434 4FE5CA3F F0756C00
+  27AE4F59 A903AE1D FDD1F8DD C380CF1E 7515EB1B 94F2498D 7332E207 1E673BF3
+  8E0DAE95 D583D80C DEE520B0 B100AC50 ED2C62EF 40D8D613 D1E11BF8 FE77A9F0
+  F76285A6 9103AC15 224D6BB2 535F7751 3BDAB673 9590B66A 28E2D3A1 A334D0BC 5847
+        quit
+dot1x system-auth-control
+dot1x critical eapol
+diagnostic bootup level minimal
+!
+spanning-tree mode pvst
+spanning-tree portfast bpduguard default
+spanning-tree extend system-id
+spanning-tree uplinkfast
+hw-switch switch 1 logging onboard message level 3
+!
+redundancy
+ mode sso
+!
+!
+ip tftp source-interface Vlan129
+!
+class-map match-any AutoQos-4.0-Output-Multimedia-Conf-Queue
+ match dscp af41  af42  af43
+ match cos  4
+class-map match-any AutoQos-4.0-Output-Bulk-Data-Queue
+ match dscp af11  af12  af13
+ match cos  1
+class-map match-any AutoQos-4.0-Output-Priority-Queue
+ match dscp cs4  cs5  ef
+ match cos  5
+class-map match-any AutoQos-4.0-Output-Multimedia-Strm-Queue
+ match dscp af31  af32  af33
+class-map match-any non-client-nrt-class
+class-map match-any AutoQos-4.0-Output-Trans-Data-Queue
+ match dscp af21  af22  af23
+ match cos  2
+class-map match-any AutoQos-4.0-Output-Scavenger-Queue
+ match dscp cs1
+class-map match-any AutoQos-4.0-Output-Control-Mgmt-Queue
+ match dscp cs2  cs3  cs6  cs7
+ match cos  3
+!
+policy-map AutoQos-4.0-Output-Policy
+ class AutoQos-4.0-Output-Priority-Queue
+  priority level 1 percent 30
+ class AutoQos-4.0-Output-Control-Mgmt-Queue
+  bandwidth remaining percent 10
+  queue-limit dscp cs2 percent 80
+  queue-limit dscp cs3 percent 90
+  queue-limit dscp cs6 percent 100
+  queue-limit dscp cs7 percent 100
+  queue-buffers ratio 10
+ class AutoQos-4.0-Output-Multimedia-Conf-Queue
+  bandwidth remaining percent 10
+  queue-buffers ratio 10
+ class AutoQos-4.0-Output-Trans-Data-Queue
+  bandwidth remaining percent 10
+  queue-buffers ratio 10
+ class AutoQos-4.0-Output-Bulk-Data-Queue
+  bandwidth remaining percent 4
+  queue-buffers ratio 10
+ class AutoQos-4.0-Output-Scavenger-Queue
+  bandwidth remaining percent 1
+  queue-buffers ratio 10
+ class AutoQos-4.0-Output-Multimedia-Strm-Queue
+  bandwidth remaining percent 10
+  queue-buffers ratio 10
+ class class-default
+  bandwidth remaining percent 25
+  queue-buffers ratio 25
+policy-map AutoQos-4.0-Trust-Cos-Input-Policy
+ class class-default
+  set cos cos table AutoQos-4.0-Trust-Cos-Table
+policy-map AutoQos-4.0-Trust-Dscp-Input-Policy
+ class class-default
+  set dscp dscp table AutoQos-4.0-Trust-Dscp-Table
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel21
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+!
+interface Port-channel22
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+!
+interface GigabitEthernet0/0
+ vrf forwarding Mgmt-vrf
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet1/0/1
+ description Connection to us-ads-indy-vedge-a - ge0/6
+ switchport trunk allowed vlan 118,129,131,201
+ switchport mode trunk
+ auto qos trust dscp
+ spanning-tree portfast trunk
+ service-policy input AutoQos-4.0-Trust-Dscp-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/2
+ description Connection to us-ads-indy-vedge-b - ge0/6
+ switchport trunk allowed vlan 118,129,131,201
+ switchport mode trunk
+ auto qos trust dscp
+ spanning-tree portfast trunk
+ service-policy input AutoQos-4.0-Trust-Dscp-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/3
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/4
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/5
+ description 4th Flr KAR Access Control Panel
+ switchport access vlan 112
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/0/6
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/7
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/8
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/9
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/10
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/11
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/12
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/13
+ description CA-KAR-TRET-WLC01 GE0/0/0
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 21 mode active
+!
+interface GigabitEthernet1/0/14
+ description CA-KAR-TRET-WLC02 GE0/0/0
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 22 mode active
+!
+interface GigabitEthernet1/0/15
+ description CA-KAR-TRET-WLC01 GE0/0/1
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 21 mode active
+!
+interface GigabitEthernet1/0/16
+ description CA-KAR-TRET-WLC02 GE0/0/1
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 22 mode active
+!
+interface GigabitEthernet1/0/17
+ description CA-KAR-TRET-WLC01 GE0/0/2
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 21 mode active
+!
+interface GigabitEthernet1/0/18
+ description CA-KAR-TRET-WLC02 GE0/0/2
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 22 mode active
+!
+interface GigabitEthernet1/0/19
+ description CA-KAR-TRET-WLC01 GE0/0/3
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 21 mode active
+!
+interface GigabitEthernet1/0/20
+ description CA-KAR-TRET-WLC02 GE0/0/3
+ switchport access vlan 129
+ switchport trunk native vlan 129
+ switchport trunk allowed vlan 100-129
+ switchport mode trunk
+ channel-group 22 mode active
+!
+interface GigabitEthernet1/0/21
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/22
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/23
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/24
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/25
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/26
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/27
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/28
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/29
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/30
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/31
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/32
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/33
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/34
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/35
+ description User/Phone Port
+ switchport access vlan 40
+ switchport mode access
+ switchport voice vlan 45
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/36
+ description Security Camera Switch
+ switchport access vlan 201
+ switchport mode access
+!
+interface GigabitEthernet1/0/37
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/38
+ description Mitel-LAN
+ switchport access vlan 128
+ switchport mode access
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/39
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/40
+ description ADVA-LAN
+ switchport access vlan 128
+ switchport mode access
+ shutdown
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/41
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/42
+ description User/Phone Port
+ switchport access vlan 128
+ switchport mode access
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/43
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/44
+ description User/Phone Port
+ switchport access vlan 128
+ switchport mode access
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/45
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/46
+ description User/Phone Port
+ switchport access vlan 128
+ switchport mode access
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/47
+ description User/Phone Port
+ switchport access vlan 100
+ switchport mode access
+ switchport voice vlan 128
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface GigabitEthernet1/0/48
+ description User/Phone Port
+ switchport access vlan 128
+ switchport mode access
+ auto qos trust
+ spanning-tree portfast
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface TenGigabitEthernet1/1/1
+ description TEMP UPLINK CORE TE1/1/8
+ switchport access vlan 605
+ switchport mode trunk
+ auto qos trust
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface TenGigabitEthernet1/1/2
+ description Link to US-OTCCO-MDF-SW01
+ switchport access vlan 900
+ switchport trunk native vlan 900
+ switchport trunk allowed vlan 100-129,201-204,249,900
+ switchport mode trunk
+ auto qos trust
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface TenGigabitEthernet1/1/3
+ description Link to US-OTCCO-MDF-SW01
+ switchport access vlan 900
+ switchport trunk native vlan 900
+ switchport trunk allowed vlan 100-129,201-204,249,900
+ switchport mode trunk
+ auto qos trust
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface TenGigabitEthernet1/1/4
+ description Link to US-OTCCO-MDF-SW01
+ switchport access vlan 900
+ switchport trunk native vlan 900
+ switchport trunk allowed vlan 100-129,201-204,249,900
+ switchport mode trunk
+ auto qos trust
+ service-policy input AutoQos-4.0-Trust-Cos-Input-Policy
+ service-policy output AutoQos-4.0-Output-Policy
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan40
+ ip address 10.37.40.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan45
+ ip address 10.37.45.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan50
+ ip address 10.37.50.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan55
+ ip address 10.37.55.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan60
+ ip address 10.37.60.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan65
+ ip address 10.37.65.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan80
+ ip address 10.37.80.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan85
+ ip address 10.37.85.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan90
+ ip address 10.37.90.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan95
+ ip address 10.37.95.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan102
+ ip address 10.37.36.1 255.255.252.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan103
+ ip address 10.37.16.1 255.255.252.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan112
+ ip address 10.37.124.1 255.255.252.0
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan116
+ ip address 10.37.8.1 255.255.248.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan129
+ description Network Management VLAN
+ ip address 10.129.37.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan130
+ ip address 10.37.98.1 255.255.255.0
+ ip helper-address 172.19.100.100
+ ip helper-address 172.27.91.173
+ ip helper-address 172.18.65.173
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan131
+ description Router Transit VLAN
+ ip address 10.131.37.1 255.255.255.0
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Vlan605
+ ip address 10.37.5.1 255.255.255.0
+!
+ip forward-protocol nd
+no ip http server
+ip http authentication local
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.131.37.10 name Default-to-SDWAN
+ip route 10.37.40.0 255.255.255.0 10.37.5.4
+ip route 10.37.45.0 255.255.255.0 10.37.5.4
+ip route 10.37.50.0 255.255.255.0 10.37.5.5
+ip route 10.37.55.0 255.255.255.0 10.37.5.5
+ip route 10.37.60.0 255.255.255.0 10.37.5.6
+ip route 10.37.65.0 255.255.255.0 10.37.5.6
+ip route 10.37.80.0 255.255.255.0 10.37.5.8
+ip route 10.37.85.0 255.255.255.0 10.37.5.8
+ip route 10.37.90.0 255.255.255.0 10.37.5.9
+ip route 10.37.95.0 255.255.255.0 10.37.5.9
+ip route 10.129.37.0 255.255.255.0 10.37.5.2
+ip tacacs source-interface Vlan129
+!
+ip access-list extended ACL-ALLOW
+ permit ip any any
+ip access-list extended ACL-DEFAULT
+ remark DHCP
+ permit udp any eq bootpc any eq bootps
+ remark DNS
+ permit udp any any eq domain
+ remark Ping
+ permit icmp any any
+ remark PXE / TFTP
+ permit udp any any eq tftp
+ remark Allow HTTP/S to ISE and WebAuth portal
+ permit tcp any host 172.27.91.171 eq www
+ permit tcp any host 172.27.91.171 eq 443
+ permit tcp any host 172.27.91.171 eq 8443
+ permit tcp any host 172.27.91.171 eq 8905
+ permit udp any host 172.27.91.171 eq 8905
+ permit udp any host 172.27.91.171 eq 8906
+ permit tcp any host 172.27.91.171 eq 8080
+ permit udp any host 172.27.91.171 eq 9996
+ permit tcp any host 172.21.78.171 eq 443
+ permit tcp any host 172.21.78.171 eq 8443
+ permit ip any 10.10.9.0 0.1.0.255
+ permit ip any 10.12.9.0 0.3.0.255
+ permit ip any 10.16.9.0 0.15.0.255
+ permit ip any 10.32.9.0 0.31.0.255
+ permit ip any 10.64.9.0 0.31.0.255
+ permit ip any 10.96.9.0 0.3.0.255
+ permit ip any 172.27.65.0 0.0.0.255
+ permit ip any 172.27.66.0 0.0.0.63
+ permit ip any 172.27.67.0 0.0.0.31
+ permit ip any host 172.27.80.111
+ permit ip any host 172.27.80.145
+ permit ip any host 172.27.80.163
+ permit ip any host 172.27.80.31
+ permit ip any host 172.27.80.80
+ permit ip any host 172.27.80.82
+ permit ip any host 172.27.80.84
+ permit ip any host 172.27.80.125
+ permit ip any host 172.27.80.178
+ permit ip any host 172.27.81.39
+ permit ip any 172.27.81.192 0.0.0.63
+ permit ip any host 10.252.101.246
+ permit ip any host 10.252.101.248
+ permit ip any host 10.252.101.95
+ permit ip any host 10.252.105.20
+ permit ip any host 10.252.105.191
+ permit ip any 10.252.1.0 0.0.0.255
+ permit ip any 10.252.11.0 0.0.0.255
+ permit ip any 10.252.12.0 0.0.0.255
+ permit ip any 10.252.16.0 0.0.3.255
+ permit ip any host 172.21.18.222
+ permit ip any host 172.21.18.230
+ remark Deny all unmatched traffic
+ deny   ip any any
+ permit tcp any host 172.18.65.171 eq www
+ permit tcp any host 172.18.65.171 eq 8905
+ permit udp any host 172.18.65.171 eq 8905
+ permit udp any host 172.18.65.171 eq 8906
+ permit tcp any host 172.18.65.171 eq 8080
+ permit udp any host 172.18.65.171 eq 9996
+ deny   ip any host 172.18.65.171
+ip access-list extended ACL-POSTURE-REDIRECT
+ deny   ip any any
+ remark Limited access DACL for posture and remediation in enforcement mode.
+ deny   udp any eq bootpc any eq bootps
+ deny   udp any any eq domain
+ deny   icmp any any
+ deny   ip any 10.10.9.0 0.1.0.255
+ deny   ip any 10.12.9.0 0.3.0.255
+ deny   ip any 10.16.9.0 0.15.0.255
+ deny   ip any 10.32.9.0 0.31.0.255
+ deny   ip any 10.64.9.0 0.31.0.255
+ deny   ip any 10.96.9.0 0.3.0.255
+ deny   ip any 172.27.65.0 0.0.0.255
+ deny   ip any 172.27.66.0 0.0.0.63
+ deny   ip any 172.27.67.0 0.0.0.31
+ deny   ip any 172.27.76.0 0.0.0.255
+ deny   ip any 172.27.81.192 0.0.0.63
+ deny   ip any 172.27.175.0 0.0.0.255
+ deny   ip any host 172.27.80.111
+ deny   ip any host 172.27.80.145
+ deny   ip any host 172.27.80.163
+ deny   ip any host 172.27.80.31
+ deny   ip any host 172.27.80.80
+ deny   ip any host 172.27.80.82
+ deny   ip any host 172.27.80.84
+ deny   ip any host 172.27.80.125
+ deny   ip any host 172.27.80.178
+ deny   ip any host 172.27.81.39
+ deny   ip any host 172.21.16.87
+ deny   ip any host 172.27.91.171
+ deny   ip any host 172.21.78.171
+ deny   ip any host 172.21.18.222
+ deny   ip any host 172.21.18.230
+ deny   ip any host 10.252.101.95
+ deny   ip any host 10.252.101.246
+ deny   ip any host 10.252.101.248
+ deny   ip any host 10.252.105.20
+ deny   ip any host 10.252.105.191
+ deny   ip any 10.252.1.0 0.0.0.255
+ deny   ip any 10.252.11.0 0.0.0.255
+ deny   ip any 10.252.12.0 0.0.0.255
+ deny   ip any 10.252.16.0 0.0.3.255
+ permit ip any any
+ip access-list extended ACL-WEBAUTH-REDIRECT
+ deny   ip any host 172.27.91.171
+ deny   ip any host 172.21.78.171
+ permit tcp any any eq www
+ permit tcp any any eq 443
+ permit tcp any any eq 8443
+ip access-list extended DEFAULT-ACL
+ remark Default ACL for ISE user interface
+ permit ip any any
+ip access-list extended INDY-LGB-In
+ permit icmp 10.127.13.0 0.0.0.255 any
+ permit tcp 10.127.13.0 0.0.0.255 eq 22 10.0.0.0 0.255.255.255 established
+ deny   ip any 10.0.0.0 0.255.255.255 log-input
+ deny   ip any 172.16.0.0 0.15.255.255 log-input
+ deny   ip any 192.168.0.0 0.0.255.255 log-input
+ permit ip 10.127.13.0 0.0.0.255 any
+!
+ip radius source-interface Vlan129
+logging trap notifications
+logging source-interface Vlan129
+logging host 172.27.101.150
+logging host 172.27.51.239
+access-list 2 permit 172.27.91.171
+access-list 2 permit 10.138.18.218
+access-list 2 permit 172.21.78.171
+access-list 2 permit 172.21.18.23
+access-list 2 permit 172.27.80.0 0.0.0.255
+access-list 2 permit 10.252.46.0 0.0.0.255
+access-list 2 permit 172.21.1.0 0.0.0.255
+access-list 2 permit 172.21.79.0 0.0.0.255
+access-list 2 permit 172.27.101.0 0.0.0.255
+access-list 2 permit 74.123.47.0 0.0.0.255
+access-list 2 deny   any log
+access-list 2 remark ADESA SNMP Hosts
+access-list 2 permit 172.16.0.0 0.15.255.255
+access-list 2 permit 10.0.0.0 0.255.255.255
+access-list 2 permit 192.168.0.0 0.0.255.255
+access-list 3 permit 10.138.18.218
+access-list 3 remark ADESA VTY Hosts
+access-list 3 permit 10.252.110.242
+access-list 3 permit 10.252.110.243
+access-list 3 permit 172.21.18.23
+access-list 3 permit 10.252.46.0 0.0.0.255
+access-list 3 permit 172.27.101.0 0.0.0.255
+access-list 3 permit 172.21.1.0 0.0.0.255
+access-list 3 permit 172.21.79.0 0.0.0.255
+access-list 3 permit 10.131.0.0 0.0.255.255
+access-list 3 permit 172.20.208.0 0.0.15.255
+access-list 3 permit 172.27.248.0 0.0.0.255
+access-list 3 permit 74.123.47.0 0.0.0.255
+access-list 3 permit 172.27.80.0 0.0.0.255
+access-list 3 permit 192.168.61.0 0.0.0.255
+access-list 3 permit 192.168.4.0 0.0.0.255
+access-list 3 permit 192.168.62.0 0.0.0.255
+access-list 3 deny   any log
+access-list 3 remark ADESA VTY Hosts
+access-list 10 permit 74.123.47.0 0.0.0.255
+!
+snmp-server community Ad354mgmt RO 2
+snmp-server community Z3n3Tr4 RO 10
+snmp-server community U4bELB=QB8Grg|X8VLcgTzNhor|.t RO
+snmp-server trap-source Vlan129
+snmp-server location 150 John St. 5th floor Toronto, ON M5V 3E3 Canada
+snmp-server contact 647-261-4890
+snmp-server enable traps mac-notification change move threshold
+tacacs-server host 172.27.91.173
+tacacs-server host 172.18.65.173
+tacacs-server directed-request
+tacacs-server key 7 122B56433E0715402F28367B27
+radius-server attribute 6 on-for-login-auth
+radius-server attribute 8 include-in-access-req
+radius-server attribute 25 access-request include
+radius-server attribute 31 mac format ietf upper-case
+radius-server attribute 31 send nas-port-detail mac-only
+radius-server dead-criteria time 10 tries 3
+radius-server timeout 3
+radius-server deadtime 5
+!
+radius server ind02-ise-plcy-01
+ address ipv4 172.18.65.173 auth-port 1645 acct-port 1646
+!
+!
+!
+banner motd ^C
+===========================================================================
+
+PROPRIETARY INFORMATION
+
+All content of this system and its associated sub-systems are PROPRIETARY
+INFORMATION and remain the sole and exclusive property of this company.
+This system may be accessed and used by authorized personnel only.
+Authorized users may only perform authorized activities and may not exceed
+the limits of such authorization. Disclosure of information found in this
+system for any unauthorized use is *STRICTLY PROHIBITED*. All activities on
+this system are subject to monitoring. Intentional misuse of this system
+can result in disciplinary action or criminal prosecution.
+
+===========================================================================
+^C
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ exec-timeout 30 0
+ logging synchronous
+ length 0
+ transport input ssh
+line vty 5 15
+ exec-timeout 30 0
+ logging synchronous
+ length 0
+ transport input ssh
+!
+ntp source Vlan129
+ntp server 172.27.102.100 prefer
+ntp server 172.21.11.100
+wsma agent exec
+ profile httplistener
+ profile httpslistener
+!
+wsma agent config
+ profile httplistener
+ profile httpslistener
+!
+wsma agent filesys
+ profile httplistener
+ profile httpslistener
+!
+wsma agent notify
+ profile httplistener
+ profile httpslistener
+!
+!
+wsma profile listener httplistener
+ transport http
+!
+wsma profile listener httpslistener
+ transport https
+!
+ap group default-group
+end

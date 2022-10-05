@@ -1,0 +1,1231 @@
+(TR-WLC-01) #show running-config
+Building Configuration...
+
+version 6.5
+enable secret "70a94ddf0177f82eda31d90672f0f305bccad3db627b7b9ac0"
+hostname "TR-WLC-01"
+clock timezone EST -5
+location "150 John St - Floor 4"
+controller config 1
+ip NAT pool dynamic-srcnat 0.0.0.0 0.0.0.0
+ip access-list geolocation global-geolocation-acl
+!
+ip access-list eth validuserethacl
+  permit any
+!
+netservice svc-ipp-tcp tcp 631
+netservice svc-dhcp udp 67 68 alg dhcp
+netservice svc-citrix tcp 2598
+netservice svc-pcoip-udp udp 50002
+netservice svc-netbios-ssn tcp 139
+netservice svc-tftp udp 69 alg tftp
+netservice svc-papi udp 8211
+netservice svc-ica tcp 1494
+netservice svc-natt udp 4500
+netservice svc-lpd tcp 515
+netservice svc-microsoft-ds tcp 445
+netservice svc-syslog udp 514
+netservice svc-msrpc-tcp tcp 135 139
+netservice svc-msrpc-udp udp 135 139
+netservice svc-smtp tcp 25
+netservice svc-http-proxy2 tcp 8080
+netservice svc-cfgm-tcp tcp 8211
+netservice vnc tcp 5900 5905
+netservice svc-web tcp list "80 443"
+netservice svc-h323-udp udp 1718 1719
+netservice svc-sccp tcp 2000 alg sccp
+netservice svc-http tcp 80
+netservice svc-bootp udp 67 69
+netservice svc-telnet tcp 23
+netservice svc-vmware-rdp tcp 3389
+netservice svc-ipp-udp udp 631
+netservice svc-noe-oxo udp 5000 alg noe
+netservice svc-vocera udp 5002 alg vocera
+netservice svc-esp 50
+netservice svc-http-proxy1 tcp 3128
+netservice svc-sec-papi udp 8209
+netservice svc-l2tp udp 1701
+netservice svc-rtsp tcp 554 alg rtsp
+netservice svc-gre 47
+netservice svc-sip-tcp tcp 5060
+netservice svc-pptp tcp 1723
+netservice svc-snmp udp 161
+netservice svc-svp 119 alg svp
+netservice svc-icmp 1
+netservice svc-smb-tcp tcp 445
+netservice svc-pcoip2-tcp tcp 4172
+netservice svc-v6-icmp 58
+netservice svc-ssh tcp 22
+netservice svc-h323-tcp tcp 1720
+netservice svc-ntp udp 123
+netservice svc-pop3 tcp 110
+netservice svc-netbios-ns udp 137
+netservice svc-adp udp 8200
+netservice svc-v6-dhcp udp 546 547
+netservice svc-dns udp 53 alg dns
+netservice svc-netbios-dgm udp 138
+netservice svc-http-proxy3 tcp 8888
+netservice svc-sip-udp udp 5060
+netservice svc-kerberos udp 88
+netservice svc-sips tcp 5061 alg sips
+netservice svc-pcoip2-udp udp 4172
+netservice svc-pcoip-tcp tcp 50002
+netservice svc-noe udp 32512 alg noe
+netservice svc-nterm tcp 1026 1028
+netservice svc-ike udp 500
+netservice svc-snmp-trap udp 162
+netservice svc-https tcp 443
+netservice svc-smb-udp udp 445
+netservice svc-ftp tcp 21 alg ftp
+netdestination6 ipv6-reserved-range
+  invert
+  network 2000::/3
+!
+netdestination wificalling-block
+  name pub.3gppnetwork.org
+  name vowifi.com
+!
+netexthdr default
+!
+time-range working-hours periodic
+ weekday 08:00 to  18:00
+!
+time-range night-hours periodic
+ weekday 18:01 to  23:59
+ weekday 00:00 to  07:59
+!
+time-range weekend periodic
+ weekend 00:00 to  23:59
+!
+ip access-list session svp-acl
+  any any svc-svp  permit queue high
+  user host 224.0.1.116 any  permit
+!
+ip access-list session apprf-stateful-dot1x-sacl
+!
+ip access-list session apprf-voice-sacl
+!
+ip access-list session apprf-default-vpn-role-sacl
+!
+ip access-list session logon-control
+  user any udp 68  deny
+  any any svc-icmp  permit
+  any any svc-dns  permit
+  any any svc-dhcp  permit
+  any any svc-natt  permit
+  any network 169.254.0.0 255.255.0.0 any  deny
+  any network 240.0.0.0 240.0.0.0 any  deny
+!
+ip access-list session ap-uplink-acl
+  any any udp 68  permit
+  any any svc-icmp  permit
+  any host 224.0.0.251 udp 5353  permit
+!
+ip access-list session v6-http-acl
+  ipv6  any any svc-http  permit
+!
+ip access-list session v6-logon-control
+  ipv6  user any udp 546  deny
+  ipv6  any any svc-v6-icmp  permit
+  ipv6  any any svc-v6-dhcp  permit
+  ipv6  any any svc-dns  permit
+  ipv6  any network fc00::/7 any  permit
+  ipv6  any network fe80::/64 any  permit
+  ipv6  any   alias ipv6-reserved-range any  deny
+!
+ip access-list session http-acl
+  any any svc-http  permit
+!
+ip access-list session icmp-acl
+  any any svc-icmp  permit
+!
+ip access-list session vocera-acl
+  any any svc-vocera  permit queue high
+!
+ip access-list session vmware-acl
+  any any svc-vmware-rdp  permit tos 46 dot1p-priority 6
+  any any svc-pcoip-tcp  permit tos 46 dot1p-priority 6
+  any any svc-pcoip-udp  permit tos 46 dot1p-priority 6
+  any any svc-pcoip2-tcp  permit tos 46 dot1p-priority 6
+  any any svc-pcoip2-udp  permit tos 46 dot1p-priority 6
+!
+ip access-list session citrix-acl
+  any any svc-citrix  permit tos 46 dot1p-priority 6
+  any any svc-ica  permit tos 46 dot1p-priority 6
+!
+ip access-list session tftp-acl
+  any any svc-tftp  permit
+!
+ip access-list session sip-acl
+  any any svc-sip-udp  permit queue high
+  any any svc-sip-tcp  permit queue high
+!
+ip access-list session ra-guard
+  ipv6  user any icmpv6 rtr-adv  deny
+!
+ip access-list session srcnat
+  user any any  src-nat
+!
+ip access-list session global-sacl
+!
+ip access-list session v6-dhcp-acl
+  ipv6  any any svc-v6-dhcp  permit
+!
+ip access-list session cplogout
+  user   alias controller svc-https  dst-nat 8081
+!
+ip access-list session apprf-authenticated-sacl
+!
+ip access-list session wificalling-acl
+  any any tcp 443  permit
+!
+ip access-list session vpnlogon
+  user any svc-ike  permit
+  user any svc-esp  permit
+  any any svc-l2tp  permit
+  any any svc-pptp  permit
+  any any svc-gre  permit
+!
+ip access-list session v6-control
+  ipv6  user any udp 546  deny
+  ipv6  any any svc-v6-icmp  permit
+  ipv6  any any svc-dns  permit
+  ipv6  any any svc-papi  permit
+  ipv6  any any svc-sec-papi  permit
+  ipv6  any any svc-cfgm-tcp  permit
+  ipv6  any any svc-adp  permit
+  ipv6  any any svc-tftp  permit
+  ipv6  any any svc-dhcp  permit
+  ipv6  any any svc-natt  permit
+!
+ip access-list session allow-diskservices
+  any any svc-netbios-dgm  permit
+  any any svc-netbios-ssn  permit
+  any any svc-microsoft-ds  permit
+  any any svc-netbios-ns  permit
+!
+ip access-list session apprf-guest-sacl
+!
+ip access-list session wificalling-block
+  any   alias wificalling-block any  deny
+!
+ip access-list session v6-ap-acl
+  ipv6  any any svc-gre  permit
+  ipv6  any any svc-syslog  permit
+  ipv6  any user svc-snmp  permit
+  ipv6  user any svc-snmp-trap  permit
+  ipv6  user any svc-ntp  permit
+  ipv6  user any svc-ftp  permit
+!
+ip access-list session apprf-default-via-role-sacl
+!
+ip access-list session v6-allowall
+  ipv6  any any any  permit
+!
+ip access-list session v6-icmp-acl
+  ipv6  any any svc-v6-icmp  permit
+!
+ip access-list session validuser
+  network 127.0.0.0 255.0.0.0 any any  deny
+  network 169.254.0.0 255.255.0.0 any any  deny
+  network 224.0.0.0 240.0.0.0 any any  deny
+  host 255.255.255.255 any any  deny
+  network 240.0.0.0 240.0.0.0 any any  deny
+  any any any  permit
+  ipv6 host fe80:: any any  deny
+  ipv6 network fc00::/7 any any  permit
+  ipv6 network fe80::/64 any any  permit
+  ipv6  alias ipv6-reserved-range any any  deny
+  ipv6  any any any  permit
+!
+ip access-list session v6-dns-acl
+  ipv6  any any svc-dns  permit
+!
+ip access-list session captiveportal
+  user   alias controller svc-https  dst-nat 8081
+  user any svc-http  dst-nat 8080
+  user any svc-https  dst-nat 8081
+  user any svc-http-proxy1  dst-nat 8088
+  user any svc-http-proxy2  dst-nat 8088
+  user any svc-http-proxy3  dst-nat 8088
+!
+ip access-list session v6-https-acl
+  ipv6  any any svc-https  permit
+!
+ip access-list session dhcp-acl
+  any any svc-dhcp  permit
+!
+ip access-list session h323-acl
+  any any svc-h323-tcp  permit queue high
+  any any svc-h323-udp  permit queue high
+!
+ip access-list session allowall
+  any any any  permit
+  ipv6  any any any  permit
+!
+ip access-list session allow-printservices
+  any any svc-lpd  permit
+  any any svc-ipp-tcp  permit
+  any any svc-ipp-udp  permit
+!
+ip access-list session https-acl
+  any any svc-https  permit
+!
+ip access-list session skinny-acl
+  any any svc-sccp  permit queue high
+!
+ip access-list session ap-acl
+  any any svc-gre  permit
+  any any svc-syslog  permit
+  any user svc-snmp  permit
+  user any svc-snmp-trap  permit
+  user any svc-ntp  permit
+  user any svc-ftp  permit
+!
+ip access-list session captiveportal6
+  ipv6  user   alias controller6 svc-https  captive
+  ipv6  user any svc-http  captive
+  ipv6  user any svc-https  captive
+  ipv6  user any svc-http-proxy1  captive
+  ipv6  user any svc-http-proxy2  captive
+  ipv6  user any svc-http-proxy3  captive
+!
+ip access-list session control
+  user any udp 68  deny
+  any any svc-icmp  permit
+  any any svc-dns  permit
+  any any svc-papi  permit
+  any any svc-sec-papi  permit
+  any any svc-cfgm-tcp  permit
+  any any svc-adp  permit
+  any any svc-tftp  permit
+  any any svc-dhcp  permit
+  any any svc-natt  permit
+  any any tcp 6633  permit
+!
+ip access-list session dns-acl
+  any any svc-dns  permit
+!
+ip access-list session noe-acl
+  any any svc-noe  permit queue high
+!
+vpn-dialer default-dialer
+  ike authentication PRE-SHARE changeme
+!
+user-role default-via-role
+ access-list session global-sacl
+ access-list session apprf-default-via-role-sacl
+ access-list session allowall
+!
+user-role ap-role
+ access-list session ra-guard
+ access-list session control
+ access-list session ap-acl
+ access-list session v6-control
+ access-list session v6-ap-acl
+!
+user-role sys-ap-role
+!
+user-role stateful-dot1x
+ access-list session global-sacl
+ access-list session apprf-stateful-dot1x-sacl
+!
+user-role guest-logon
+ captive-portal "default"
+ access-list session ra-guard
+ access-list session logon-control
+ access-list session captiveportal
+ access-list session v6-logon-control
+ access-list session captiveportal6
+!
+user-role voice
+ access-list session global-sacl
+ access-list session apprf-voice-sacl
+ access-list session ra-guard
+ access-list session sip-acl
+ access-list session noe-acl
+ access-list session svp-acl
+ access-list session vocera-acl
+ access-list session skinny-acl
+ access-list session h323-acl
+ access-list session dhcp-acl
+ access-list session tftp-acl
+ access-list session dns-acl
+ access-list session icmp-acl
+ access-list session wificalling-acl
+!
+user-role default-vpn-role
+ access-list session global-sacl
+ access-list session apprf-default-vpn-role-sacl
+ access-list session ra-guard
+ access-list session allowall
+ access-list session v6-allowall
+!
+user-role logon
+ access-list session ra-guard
+ access-list session logon-control
+ access-list session captiveportal
+ access-list session vpnlogon
+ access-list session v6-logon-control
+ access-list session captiveportal6
+!
+user-role authenticated
+ access-list session global-sacl
+ access-list session apprf-authenticated-sacl
+ access-list session ra-guard
+ access-list session allowall
+ access-list session v6-allowall
+!
+user-role guest
+ access-list session global-sacl
+ access-list session apprf-guest-sacl
+ access-list session ra-guard
+ access-list session http-acl
+ access-list session https-acl
+ access-list session dhcp-acl
+ access-list session icmp-acl
+ access-list session dns-acl
+ access-list session v6-http-acl
+ access-list session v6-https-acl
+ access-list session v6-dhcp-acl
+ access-list session v6-icmp-acl
+ access-list session v6-dns-acl
+!
+user-role default-iap-user-role
+ access-list session allowall
+!
+!
+
+controller-ip vlan 2254
+kernel coredump
+interface mgmt
+        shutdown
+!
+
+dialer group evdo_us
+  init-string ATQ0V1E0
+  dial-string ATDT#777
+!
+
+dialer group gsm_us
+  init-string AT+CGDCONT=1,"IP","ISP.CINGULAR"
+  dial-string ATD*99#
+!
+
+dialer group gsm_asia
+  init-string AT+CGDCONT=1,"IP","internet"
+  dial-string ATD*99***1#
+!
+
+dialer group vivo_br
+  init-string AT+CGDCONT=1,"IP","zap.vivo.com.br"
+  dial-string ATD*99#
+!
+
+
+
+vlan 1505
+vlan 1506
+vlan 1507
+vlan 1510
+vlan 2254
+
+
+interface gigabitethernet 0/0/0
+        description "GE0/0/0"
+        trusted
+        trusted vlan 1-4094
+        lacp group 0 mode active
+!
+
+interface gigabitethernet 0/0/1
+        description "GE0/0/1"
+        trusted
+        trusted vlan 1-4094
+!
+
+interface gigabitethernet 0/0/2
+        description "GE0/0/2"
+        trusted
+        trusted vlan 1-4094
+!
+
+interface gigabitethernet 0/0/3
+        description "GE0/0/3"
+        trusted
+        trusted vlan 1-4094
+!
+
+interface gigabitethernet 0/0/4
+        description "GE0/0/4"
+        trusted
+        trusted vlan 1-4094
+        lacp group 0 mode active
+!
+
+interface gigabitethernet 0/0/5
+        description "GE0/0/5"
+        trusted
+        trusted vlan 1-4094
+!
+
+interface gigabitethernet 0/0/6
+        description "GE0/0/6"
+        trusted
+        trusted vlan 1-4094
+!
+
+interface gigabitethernet 0/0/7
+        description "GE0/0/7"
+        trusted
+        trusted vlan 1-4094
+!
+
+interface port-channel 0
+        trusted
+        trusted vlan 1-4094
+        switchport mode trunk
+        switchport access vlan 1510
+        switchport trunk native vlan 2254
+        spanning-tree portfast trunk
+!
+
+interface vlan 2254
+        ip address 10.150.50.2 255.255.255.0
+!
+
+interface vlan 1
+        shutdown
+!
+
+!
+master-redundancy
+  master-vrrp 254
+  peer-ip-address 10.150.50.3 ipsec 3_CLUE.bland.stung
+!
+vrrp 254
+  priority 110
+  ip address 10.150.50.4
+  vlan 2254
+  preempt delay 0
+  no shutdown
+!
+!
+ip default-gateway 10.150.50.1
+no uplink wired vlan 1
+uplink disable
+ip nexthop-list pan-gp-ipsec-map-list
+!
+
+crypto isakmp policy 20
+  encryption aes256
+!
+
+crypto isakmp policy 10001
+!
+
+crypto isakmp policy 10002
+  encryption aes256
+  authentication rsa-sig
+!
+
+crypto isakmp policy 10003
+  encryption aes256
+!
+
+crypto isakmp policy 10004
+  version v2
+  encryption aes256
+  authentication rsa-sig
+!
+
+crypto isakmp policy 10005
+  encryption aes256
+!
+
+crypto isakmp policy 10006
+  version v2
+  encryption aes128
+  authentication rsa-sig
+!
+
+crypto isakmp policy 10007
+  version v2
+  encryption aes128
+!
+
+crypto isakmp policy 10008
+  version v2
+  encryption aes128
+  hash sha2-256-128
+  group 19
+  authentication ecdsa-256
+  prf prf-hmac-sha256
+!
+
+crypto isakmp policy 10009
+  version v2
+  encryption aes256
+  hash sha2-384-192
+  group 20
+  authentication ecdsa-384
+  prf prf-hmac-sha384
+!
+
+crypto isakmp policy 10012
+  version v2
+  encryption aes256
+  authentication rsa-sig
+!
+
+crypto isakmp policy 10013
+  encryption aes256
+!
+
+crypto-local isakmp key "3_CLUE.bland.stung" address 10.150.50.3 netmask 255.255.255.255
+crypto ipsec transform-set default-ha-transform esp-3des esp-sha-hmac
+crypto ipsec transform-set default-boc-bm-transform esp-aes256 esp-sha-hmac
+crypto ipsec transform-set default-1st-ikev2-transform esp-aes256 esp-sha-hmac
+crypto ipsec transform-set default-3rd-ikev2-transform esp-aes128 esp-sha-hmac
+crypto ipsec transform-set default-rap-transform esp-aes256 esp-sha-hmac
+crypto ipsec transform-set default-aes esp-aes256 esp-sha-hmac
+crypto dynamic-map default-rap-ipsecmap 10001
+  version v2
+  set transform-set "default-gcm256" "default-gcm128" "default-rap-transform"
+!
+
+crypto dynamic-map default-dynamicmap 10000
+  set transform-set "default-transform" "default-aes"
+!
+
+crypto map GLOBAL-IKEV2-MAP 10000 ipsec-isakmp dynamic default-rap-ipsecmap
+crypto map GLOBAL-MAP 10000 ipsec-isakmp dynamic default-dynamicmap
+crypto-local ipsec-map default-ha-ipsecmap10.150.50.3 9999
+  version v2
+  set ikev2-policy 10006
+  peer-ip 10.150.50.3
+  vlan 0
+  src-net 10.150.50.2 255.255.255.255
+  dst-net 10.150.50.3 255.255.255.255
+  set transform-set "default-ha-transform"
+  pre-connect disable
+ factory-cert-auth disable
+  trusted enable
+  uplink-failover disable
+  ip-compression disable
+  force-natt disable
+!
+
+crypto isakmp eap-passthrough eap-tls
+crypto isakmp eap-passthrough eap-peap
+crypto isakmp eap-passthrough eap-mschapv2
+
+vpdn group l2tp
+!
+
+
+
+
+
+!
+
+snmp-server community "TrAdeREVro"
+vpdn group pptp
+!
+
+tunneled-node-address 0.0.0.0
+ap-crash-transfer
+
+adp discovery enable
+adp igmp-join enable
+adp igmp-vlan 0
+
+voice rtcp-inactivity disable
+voice alg-based-cac enable
+voice sip-midcall-req-timeout disable
+ap ap-blacklist-time 3600
+ap flush-r1-on-new-r0 disable
+amon msg-buffer-size 32768
+
+
+stm mon-update-queue 28992
+
+no ssh mgmt-auth public-key
+ssh mgmt-auth username/password
+mgmt-user admin root 65f7904d01047ab8108218615e8d3e686d3b4f47585c1c978a
+
+
+ntp server 10.150.254.1
+
+
+no database synchronize
+ip mobile domain default
+!
+!
+!
+airgroup mdns "disable"
+!
+airgroup dlna "disable"
+!
+airgroup location-discovery "enable"
+!
+!
+airgroup active-wireless-discovery "disable"
+!
+airgroupservice "airplay"
+  id "_airplay._tcp"
+  id "_raop._tcp"
+  id "_appletv-v2._tcp"
+  description "AirPlay"
+!
+airgroupservice "airprint"
+  id "_ipp._tcp"
+  id "_pdl-datastream._tcp"
+  id "_printer._tcp"
+  id "_scanner._tcp"
+  id "_http._tcp"
+  id "_http-alt._tcp"
+  id "_ipp-tls._tcp"
+  id "_fax-ipp._tcp"
+  id "_riousbprint._tcp"
+  id "_ica-networking._tcp"
+  id "_ptp._tcp"
+  id "_canon-bjnp1._tcp"
+  id "_ipps._tcp"
+  id "_ica-networking2._tcp"
+  description "AirPrint"
+!
+airgroupservice "itunes"
+  id "_home-sharing._tcp"
+  id "_apple-mobdev._tcp"
+  id "_daap._tcp"
+  id "_dacp._tcp"
+  description "iTunes"
+!
+airgroupservice "remotemgmt"
+  id "_ssh._tcp"
+  id "_sftp-ssh._tcp"
+  id "_ftp._tcp"
+  id "_telnet._tcp"
+  id "_rfb._tcp"
+  id "_net-assistant._tcp"
+  description "Remote management"
+!
+airgroupservice "sharing"
+  id "_odisk._tcp"
+  id "_afpovertcp._tcp"
+  id "_xgrid._tcp"
+  description "Sharing"
+!
+airgroupservice "chat"
+  id "_presence._tcp"
+  description "Chat"
+!
+airgroupservice "googlecast"
+  id "_googlecast._tcp"
+  description "GoogleCast supported by Chromecast etc"
+!
+airgroupservice "AmazonTV"
+  id "_amzn-wplay._tcp"
+  description "Amazon fire tv"
+!
+airgroupservice "DIAL"
+  id "urn:dial-multiscreen-org:service:dial:1"
+  id "urn:dial-multiscreen-org:device:dial:1"
+  description "DIAL supported by Chromecast, FireTV, Roku etc"
+!
+airgroupservice "DLNA Media"
+  id "urn:schemas-upnp-org:device:MediaServer:1"
+  id "urn:schemas-upnp-org:device:MediaServer:2"
+  id "urn:schemas-upnp-org:device:MediaServer:3"
+  id "urn:schemas-upnp-org:device:MediaServer:4"
+  id "urn:schemas-upnp-org:device:MediaRenderer:1"
+  id "urn:schemas-upnp-org:device:MediaRenderer:2"
+  id "urn:schemas-upnp-org:device:MediaRenderer:3"
+  id "urn:schemas-upnp-org:device:MediaPlayer:1"
+  description "Media"
+!
+airgroupservice "DLNA Print"
+  id "urn:schemas-upnp-org:device:Printer:1"
+  id "urn:schemas-upnp-org:service:PrintBasic:1"
+  id "urn:schemas-upnp-org:service:PrintEnhanced:1"
+  description "Print"
+!
+airgroupservice "allowall"
+  description "Remaining-Services"
+!
+airgroup service "airplay" enable
+!
+airgroup service "airprint" enable
+!
+airgroup service "itunes" disable
+!
+airgroup service "remotemgmt" disable
+!
+airgroup service "sharing" disable
+!
+airgroup service "chat" disable
+!
+airgroup service "googlecast" enable
+!
+airgroup service "AmazonTV" enable
+!
+airgroup service "DIAL" enable
+!
+airgroup service "DLNA Media" enable
+!
+airgroup service "DLNA Print" disable
+!
+airgroup service "allowall" disable
+!
+
+ip igmp
+!
+
+ipv6 mld
+!
+
+firewall attack-rate grat-arp 50 drop
+ipv6 firewall ext-hdr-parse-len  100
+
+!
+
+!
+firewall cp
+!
+ip domain lookup
+!
+country CA
+aaa authentication mac "default"
+!
+aaa authentication dot1x "default"
+!
+aaa server-group "default"
+ auth-server Internal
+ set role condition role value-of
+!
+aaa profile "default"
+!
+aaa profile "default-dot1x-psk"
+   initial-role "authenticated"
+   authentication-dot1x "default-psk"
+!
+aaa authentication captive-portal "default"
+!
+aaa authentication wispr "default"
+!
+aaa authentication vpn "default"
+!
+aaa authentication vpn "default-rap"
+!
+aaa authentication mgmt
+!
+aaa authentication stateful-ntlm "default"
+!
+aaa authentication stateful-kerberos "default"
+!
+aaa authentication stateful-dot1x
+!
+aaa authentication wired
+!
+web-server profile
+!
+guest-access-email
+!
+voice logging
+!
+voice dialplan-profile "default"
+!
+app skype4b traffic-control "default"
+!
+voice real-time-config
+!
+voice wificalling
+!
+voice facetime
+!
+voice sip
+!
+aaa password-policy mgmt
+!
+control-plane-security
+   auto-cert-prov
+   no auto-cert-allow-all
+   auto-cert-allowed-addrs 10.150.50.21 10.150.50.254
+!
+ids management-profile
+!
+ids wms-general-profile
+!
+ids wms-local-system-profile
+!
+ids ap-rule-matching
+!
+valid-network-oui-profile
+!
+upgrade-profile
+!
+license profile
+   centralized-licensing-enable
+!
+activate-service-whitelist
+!
+file syncing profile
+!
+papi-security
+!
+ha group-profile "TR-WLC-GROUP"
+   preemption
+   state-sync
+   pre-shared-key "3_CLUE.bland.stung"
+   controller 10.150.50.2 role active
+   controller 10.150.50.3 role standby
+!
+ifmap cppm
+!
+pan profile "default"
+!
+pan-options
+!
+pan active-profile
+!
+lcd-menu
+!
+openflow-profile
+!
+aruba-central
+!
+ap system-profile "default"
+   ap-console-password "acce2c4c+|H!~."
+   bkup-passwords "CR0016557!+^>"
+!
+ap system-profile "Primary"
+   rf-band a
+   mtu 1500
+   lms-ip 10.150.50.2
+   bkup-lms-ip 10.150.50.3
+   ap-console-password "59227dc1+|H!~."
+   bkup-passwords "CR0016557!+^>"
+!
+ap regulatory-domain-profile "default"
+   country-code CA
+   valid-11g-channel 1
+   valid-11g-channel 6
+   valid-11g-channel 11
+   valid-11a-channel 36
+   valid-11a-channel 40
+   valid-11a-channel 44
+   valid-11a-channel 48
+   valid-11a-channel 52
+   valid-11a-channel 56
+   valid-11a-channel 60
+   valid-11a-channel 64
+   valid-11a-channel 100
+   valid-11a-channel 104
+   valid-11a-channel 108
+   valid-11a-channel 112
+   valid-11a-channel 116
+   valid-11a-channel 132
+   valid-11a-channel 136
+   valid-11a-channel 140
+   valid-11a-channel 144
+   valid-11a-channel 149
+   valid-11a-channel 153
+   valid-11a-channel 157
+   valid-11a-channel 161
+   valid-11a-channel 165
+   valid-11g-40mhz-channel-pair 1-5
+   valid-11g-40mhz-channel-pair 7-11
+   valid-11a-40mhz-channel-pair 36-40
+   valid-11a-40mhz-channel-pair 44-48
+   valid-11a-40mhz-channel-pair 52-56
+   valid-11a-40mhz-channel-pair 60-64
+   valid-11a-40mhz-channel-pair 100-104
+   valid-11a-40mhz-channel-pair 108-112
+   valid-11a-40mhz-channel-pair 132-136
+   valid-11a-40mhz-channel-pair 140-144
+   valid-11a-40mhz-channel-pair 149-153
+   valid-11a-40mhz-channel-pair 157-161
+   valid-11a-80mhz-channel-group 36-48
+   valid-11a-80mhz-channel-group 52-64
+   valid-11a-80mhz-channel-group 100-112
+   valid-11a-80mhz-channel-group 132-144
+   valid-11a-80mhz-channel-group 149-161
+   valid-11a-160mhz-channel-group 36-64
+!
+ap wired-ap-profile "default"
+!
+ap enet-link-profile "default"
+!
+ap mesh-ht-ssid-profile "default"
+!
+ap lldp med-network-policy-profile "default"
+!
+ap mesh-cluster-profile "default"
+!
+ap lldp profile "default"
+!
+ap mesh-radio-profile "default"
+!
+ap wired-port-profile "default"
+!
+ids general-profile "default"
+!
+ids rate-thresholds-profile "default"
+!
+ids signature-profile "default"
+!
+ids impersonation-profile "default"
+!
+ids unauthorized-device-profile "default"
+!
+ids signature-matching-profile "default"
+   signature "Deauth-Broadcast"
+   signature "Disassoc-Broadcast"
+!
+ids dos-profile "default"
+!
+ids profile "default"
+!
+rf arm-profile "arm-maintain"
+   assignment maintain
+   no scanning
+!
+rf arm-profile "arm-scan"
+!
+rf arm-profile "default-a"
+   max-tx-power 15
+   min-tx-power 12
+!
+rf optimization-profile "default"
+!
+rf event-thresholds-profile "default"
+!
+rf am-scan-profile "default"
+!
+rf dot11a-radio-profile "default"
+!
+rf dot11a-radio-profile "rp-maintain-a"
+   arm-profile "arm-maintain"
+!
+rf dot11a-radio-profile "rp-monitor-a"
+   mode am-mode
+!
+rf dot11a-radio-profile "rp-scan-a"
+   arm-profile "arm-scan"
+!
+rf dot11g-radio-profile "default"
+!
+rf dot11g-radio-profile "rp-maintain-g"
+   arm-profile "arm-maintain"
+!
+rf dot11g-radio-profile "rp-monitor-g"
+   mode am-mode
+!
+rf dot11g-radio-profile "rp-scan-g"
+   arm-profile "arm-scan"
+!
+wlan handover-trigger-profile "default"
+!
+wlan rrm-ie-profile "default"
+!
+wlan bcn-rpt-req-profile "default"
+!
+wlan dot11r-profile "default"
+!
+wlan tsm-req-profile "default"
+!
+wlan voip-cac-profile "default"
+!
+wlan ht-ssid-profile "default"
+!
+wlan hotspot anqp-venue-name-profile "default"
+!
+wlan hotspot anqp-nwk-auth-profile "default"
+!
+wlan hotspot anqp-roam-cons-profile "default"
+!
+wlan hotspot anqp-nai-realm-profile "default"
+!
+wlan hotspot anqp-3gpp-nwk-profile "default"
+!
+wlan hotspot h2qp-operator-friendly-name-profile "default"
+!
+wlan hotspot h2qp-wan-metrics-profile "default"
+!
+wlan hotspot h2qp-conn-capability-profile "default"
+!
+wlan hotspot h2qp-op-cl-profile "default"
+!
+wlan hotspot h2qp-osu-prov-list-profile "default"
+!
+wlan hotspot anqp-ip-addr-avail-profile "default"
+!
+wlan hotspot anqp-domain-name-profile "default"
+!
+wlan edca-parameters-profile station "default"
+!
+wlan edca-parameters-profile ap "default"
+!
+wlan dot11k-profile "default"
+!
+wlan ssid-profile "Apps"
+   essid "Apps"
+   opmode wpa2-psk-aes
+   hide-ssid
+   wpa-passphrase "4Apps0nLy!"
+!
+wlan ssid-profile "default"
+!
+wlan ssid-profile "TradeRev"
+   essid "TradeRev"
+   opmode wpa2-psk-aes
+   wmm
+   wpa-passphrase "LD2tngTm7!mgK#f="
+!
+wlan ssid-profile "TradeRev-Guest"
+   essid "TradeRev-Guest"
+   opmode wpa2-psk-aes
+   wmm
+   wpa-passphrase "Tr3deR4v!"
+!
+wlan ssid-profile "TradeRev-Personal"
+   essid "TradeRev-Personal"
+   opmode wpa2-psk-aes
+   wmm
+   wpa-passphrase "!MkKC55N3xcG#Bd5"
+!
+wlan hotspot advertisement-profile "default"
+!
+wlan hotspot hs2-profile "default"
+!
+wlan virtual-ap "Apps"
+   aaa-profile "default-dot1x-psk"
+   ssid-profile "Apps"
+   vlan 1510
+   band-steering
+   dynamic-mcast-optimization
+!
+wlan virtual-ap "default"
+   no vap-enable
+!
+wlan virtual-ap "TradeRev"
+   aaa-profile "default-dot1x-psk"
+   ssid-profile "TradeRev"
+   vlan 1505
+   band-steering
+   dynamic-mcast-optimization
+!
+wlan virtual-ap "TradeRev-Guest"
+   aaa-profile "default-dot1x-psk"
+   ssid-profile "TradeRev-Guest"
+   vlan 1507
+   band-steering
+   dynamic-mcast-optimization
+   broadcast-filter all
+!
+wlan virtual-ap "TradeRev-Personal"
+   aaa-profile "default-dot1x-psk"
+   ssid-profile "TradeRev-Personal"
+   vlan 1506
+   band-steering
+   dynamic-mcast-optimization
+   broadcast-filter all
+!
+ap provisioning-profile "default"
+!
+ap provisioning-profile "TR-default"
+!
+rf arm-rf-domain-profile
+   arm-rf-domain-key "5ffda408efa1d6f407ab76281c0fdf14"
+!
+ap spectrum local-override
+!
+ap-lacp-striping-ip
+!
+ap general-profile
+!
+ap-group "default"
+!
+ap-group "TR-AP-GROUP"
+   virtual-ap "TradeRev"
+   virtual-ap "TradeRev-Guest"
+   virtual-ap "TradeRev-Personal"
+   virtual-ap "Apps"
+   ap-system-profile "Primary"
+   provisioning-profile "TR-default"
+!
+airgroup cppm-server aaa
+!
+logging level warnings security subcat ids
+logging level warnings security subcat ids-ap
+
+snmp-server enable trap
+snmp-server host 10.10.10.60 version 2c TrAdeREVro udp-port 162
+snmp-server trap source 0.0.0.0
+snmp-server trap disable  wlsxAdhocNetwork
+snmp-server trap disable  wlsxAdhocNetworkBridgeDetectedAP
+snmp-server trap disable  wlsxAdhocNetworkBridgeDetectedSta
+snmp-server trap disable  wlsxAdhocUsingValidSSID
+snmp-server trap disable  wlsxAuthMaxAclEntries
+snmp-server trap disable  wlsxAuthMaxBWContracts
+snmp-server trap disable  wlsxAuthMaxUserEntries
+snmp-server trap disable  wlsxAuthServerIsUp
+snmp-server trap disable  wlsxAuthServerReqTimedOut
+snmp-server trap disable  wlsxAuthServerTimedOut
+snmp-server trap disable  wlsxChannelChanged
+snmp-server trap disable  wlsxCoverageHoleDetected
+snmp-server trap disable  wlsxDBCommunicationFailure
+snmp-server trap disable  wlsxDisconnectStationAttack
+snmp-server trap disable  wlsxESIServerDown
+snmp-server trap disable  wlsxESIServerUp
+snmp-server trap disable  wlsxFanFailure
+snmp-server trap disable  wlsxFanTrayInserted
+snmp-server trap disable  wlsxFanTrayRemoved
+snmp-server trap disable  wlsxGBICInserted
+snmp-server trap disable  wlsxIpSpoofingDetected
+snmp-server trap disable  wlsxLCInserted
+snmp-server trap disable  wlsxLCRemoved
+snmp-server trap disable  wlsxLicenseExpiry
+snmp-server trap disable  wlsxLowMemory
+snmp-server trap disable  wlsxLowOnFlashSpace
+snmp-server trap disable  wlsxOutOfRangeTemperature
+snmp-server trap disable  wlsxOutOfRangeVoltage
+snmp-server trap disable  wlsxPowerSupplyFailure
+snmp-server trap disable  wlsxPowerSupplyMissing
+snmp-server trap disable  wlsxProcessDied
+snmp-server trap disable  wlsxProcessExceedsMemoryLimits
+snmp-server trap disable  wlsxSCInserted
+snmp-server trap disable  wlsxSignatureMatch
+snmp-server trap disable  wlsxStaUnAssociatedFromUnsecureAP
+snmp-server trap disable  wlsxStationAddedToBlackList
+snmp-server trap disable  wlsxStationRemovedFromBlackList
+snmp-server trap disable  wlsxSwitchIPChanged
+snmp-server trap disable  wlsxSwitchRoleChange
+snmp-server trap disable  wlsxUserAuthenticationFailed
+snmp-server trap disable  wlsxUserEntryAuthenticated
+snmp-server trap disable  wlsxUserEntryChanged
+snmp-server trap disable  wlsxUserEntryCreated
+snmp-server trap disable  wlsxUserEntryDeAuthenticated
+snmp-server trap disable  wlsxUserEntryDeleted
+snmp-server trap disable  wlsxVrrpStateChange
+
+process monitor log
+ha group-membership TR-WLC-GROUP
+ip probe default
+  mode Ping
+  frequency 10
+  retries 3
+  burst-size 5
+!
+ip probe health-check
+  mode Ping
+  frequency 10
+  retries 3
+  burst-size 5
+!
+
+activate periodic-sync enable
+end
+
+(TR-WLC-01) #

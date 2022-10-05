@@ -1,0 +1,33 @@
+In the controller CLI (Nilesh w/ KAR)
+
+Option: Full-setup
+Are you Sure: yes
+System name: CA-KAR-TRET-WLC01 (02 for WLC02)
+Switch Role: MD
+IP type to terminate IPSec tunnel: IPV4
+Master switch IP address or FQDN: 172.27.101.13
+Is this a VPN concentrator?: No
+This device connects to master switch via VPN concentrator?: No
+Is Master  switch Virtual Mobility Master?: Yes
+Master Switch Auth Method: PSKwithIP
+Enter IPsec Pre-shared Key: 20K@R4uct10N$18
+Do you want to enable L3 Redundancy: No
+Uplink Vlan ID: 129
+Uplink port: GE 0/0/0
+Uplink port mode: trunk
+Native VLAN ID: 129
+Uplink VLAN IP assignment method: static
+Uplink VLAN static IP address: 10.129.37.11 for WLC01 and .12 for WLC02
+Netmask: 255.255.255.0
+IP Default Gateway: 10.129.37.1
+DNS IP Address: 172.27.175.244
+IPV6 Address? : No
+Dynamic Port Channel?: No
+Country Code: US
+Confirm?: yes
+Controllers IANA Time zone: America/Indiana/Indianapolis
+Time & Date: Default (hit enter)
+setup admin account?: yes
+Admin login password: KAR@uction$11
+
+
